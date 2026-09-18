@@ -1,0 +1,35 @@
+{
+  "quantity": "kappa-fission",
+  "units": "eV per source particle per mesh cell",
+  "dimension": [
+    30,
+    30,
+    40
+  ],
+  "lower_left": [
+    -23.4,
+    -23.4,
+    -60.0
+  ],
+  "upper_right": [
+    23.4,
+    23.4,
+    60.0
+  ],
+  "order": "x fastest, then y, then z",
+  "maximum": 12030.3515625,
+  "batches": 30,
+  "source_particles": 900000,
+  "seed": 449331,
+  "median_relative_standard_error_active": 0.1523772507123778,
+  "display": "Trilinear interpolation; linear scale 0 to twice the mean over all mesh cells, including zero cells; higher values use the top color. Front quadrant removed. Cell faces below 1.2 percent of the maximum are omitted.",
+  "limitations": "Independent cold fixed-source model, fission secondaries disabled. Not temperature, reactor operating power, or a coupled thermal solution.",
+  "sha256": "3a13afc66e84def28a2fa6afabb882f30156080913401e584885aa8264b1963c",
+  "statepoint_sha256": "fc300d22c90519ebbdfcb88ad538cbe858a339a32735782c17e71255a9d2dc78",
+  "input_hashes": {
+    "settings.xml": "dd42bcc30b3aef614a8acd02b26b9ec40c54c70815e4f52c47db54a707598bdf",
+    "materials.xml": "066ec03f3324ef174eeaee962d95dcb3ce0fad91e9a29282f0f0ab9943df3c85",
+    "geometry.xml": "e880624a65e21f9da91c21f2a96518ecd8c86b42a8a2ca9a4455e1d800205b9d",
+    "tallies.xml": "6bb1100fc8040146cbee410573069ec768256c4510b99a5cc45d4e00a23d998d"
+  }
+}

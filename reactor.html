@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05070a">
+  <meta name="description" content="A scroll through a boiling water reactor. Loïc Magnan.">
+  <title>BWR — Loïc Magnan</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="reactor.css?v=1.1b">
+  <script type="importmap">
+  {"imports":{"three":"./assets/vendor/three/build/three.module.min.js","three/addons/":"./assets/vendor/three/examples/jsm/"}}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#about">About this view</a>
+  <canvas id="reactor" aria-label="Scroll to move through a reactor and advance recorded neutron paths"></canvas>
+  <div class="shade" aria-hidden="true"></div>
+  <header>
+    <a href="index.html" aria-label="Back to the website">←</a>
+    <button id="motion" type="button" aria-pressed="false">Fixed camera</button>
+  </header>
+  <nav class="chapters" aria-label="Reactor chapters">
+    <a href="#fuel" data-chapter="Fuel" aria-label="Fuel pellets" title="Fuel pellets"></a>
+    <a href="#assemblies" data-chapter="Assemblies" aria-label="Fuel assemblies" title="Fuel assemblies"></a>
+    <a href="#reactor-view" data-chapter="Reactor" aria-label="Reactor" title="Reactor"></a>
+    <a href="#neutrons" data-chapter="Neutrons" aria-label="Neutron paths" title="Neutron paths"></a>
+    <a href="#explore" data-chapter="Explore" aria-label="CV, Projects and Photography" title="CV, Projects and Photography"></a>
+  </nav>
+  <main id="journey">
+    <span class="scroll-stop" id="fuel" data-scene=".06" style="top:56svh"></span>
+    <span class="scroll-stop" id="assemblies" data-scene=".265" style="top:247.333333svh"></span>
+    <span class="scroll-stop" id="reactor-view" data-scene=".375" style="top:350svh"></span>
+    <span class="scroll-stop" id="neutrons" data-scene=".625" style="top:465.111111svh"></span>
+    <span class="scroll-stop" id="explore" data-scene="1" style="top:659.555556svh"></span>
+    <div class="intro"><h1>Loïc Magnan - Engineer</h1></div>
+    <p id="scroll-cue">Scroll <span aria-hidden="true">↓</span></p>
+    <p id="load-status" role="status">Loading reactor…</p>
+  </main>
+  <nav id="destinations" aria-label="Explore the website" hidden inert>
+    <a href="cv.html">CV <span aria-hidden="true">↗</span></a>
+    <a href="projects.html">Projects <span aria-hidden="true">↗</span></a>
+    <a href="photography.html">Photography <span aria-hidden="true">↗</span></a>
+  </nav>
+  <p id="chapter" aria-live="off"></p>
+  <details id="about">
+    <summary>About</summary>
+    <p>A boiling water reactor, from fuel pellets to neutron transport.</p>
+    <p>The paths are recorded OpenMC results at the original model scale. Color follows neutron energy; dots are enlarged and time is remapped for scrolling. This small, cold teaching core uses independent source histories. The upper vessel hardware is illustrative.</p>
+    <a href="index.html">Return to the website ↗</a>
+  </details>
+  <div class="progress" aria-hidden="true"><i></i></div>
+  <noscript><p class="fallback">This view needs JavaScript. <a href="index.html">Return to the website.</a></p></noscript>
+  <script type="module" src="reactor.js?v=1.1b"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+:root { color-scheme: dark; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: #05070a; color: #e9edf1; }
+* { box-sizing: border-box; }
+html, body { margin: 0; min-width: 300px; }
+body { -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-underline-offset: 5px; }
+button { font: inherit; color: inherit; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 1px solid #adc8d8; outline-offset: 7px; }
+.skip-link { position: fixed; top: -80px; left: 24px; z-index: 9; }
+.skip-link:focus { top: 22px; background: #05070a; padding: 12px; }
+#reactor { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+.shade { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 57% 46%, transparent 42%, rgba(2,4,7,.55)); }
+header { position: fixed; z-index: 3; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: 30px 4.2vw; }
+header a { font-size: 23px; text-decoration: none; padding: 8px; margin-left: -8px; }
+header button { border: 0; background: transparent; padding: 12px 0; font-size: 12px; color: #a1abb5; cursor: pointer; }
+header button:hover { color: #edf4fc; }
+#journey { height: 759.555556svh; position: relative; pointer-events: none; }
+.intro { position: fixed; left: 7vw; top: 44%; transform: translateY(-50%); }
+h1 { margin: 0; font-weight: 400; font-size: clamp(23px, 2.65vw, 43px); letter-spacing: -.04em; line-height: 1.4; }
+#scroll-cue { position: fixed; left: 7vw; bottom: 9vh; margin: 0; color: #8995a2; font-size: 12px; letter-spacing: .015em; }
+#scroll-cue span { display: inline-block; margin-left: 24px; }
+#load-status { position: fixed; left: 7vw; bottom: 16vh; font-size: 12px; color: #9ca7b3; max-width: 300px; line-height: 1.6; }
+#load-status:empty { display: none; }
+#about { position: fixed; z-index: 4; right: 4.2vw; bottom: 30px; font-size: 12px; color: #8d99a5; max-width: min(330px, 86vw); }
+#about summary { cursor: pointer; list-style: none; text-align: right; padding: 10px 0; }
+#about summary::-webkit-details-marker { display: none; }
+#about[open] { padding: 18px 22px; background: rgba(5,7,10,.95); border: 1px solid #252d35; }
+#about p { line-height: 1.7; margin: 14px 0; }
+#about a { display: inline-block; margin: 4px 0 8px; color: #c2cdd7; }
+.progress { position: fixed; z-index: 3; right: 0; top: 0; width: 2px; height: 100%; background: #ffffff05; pointer-events: none; }
+.progress i { display: block; height: 100%; background: #829aab; transform: scaleY(0); transform-origin: top; }
+.fallback { position: fixed; bottom: 20%; left: 7vw; font-size: 14px; }
+@media (max-width: 620px) {
+  header { padding: 18px 7vw; }
+  .intro { left: 0; right: 0; top: 25%; text-align: center; padding: 0 20px; }
+  h1 { font-size: clamp(21px, 5.5vw, 30px); }
+  #scroll-cue { bottom: 8vh; }
+  #about { bottom: 22px; right: 7vw; }
+}
+
+#chapter { position:fixed; bottom:30px; left:4.2vw; margin:0; padding:10px 0; color:#8d99a5; font-size:12px; }
+.chapters { position:fixed; right:20px; top:50%; transform:translateY(-50%); z-index:4; display:flex; flex-direction:column; gap:12px; }
+.chapters a { display:grid; place-items:center; width:20px; height:20px; text-decoration:none; }
+.chapters a::after { content:""; display:block; width:3px; height:3px; border-radius:50%; background:#6d8191; }
+.chapters a:hover::after,.chapters a[aria-current="step"]::after { background:#e0edf7; width:5px; height:5px; }
+.scroll-stop { position:absolute; left:0; width:1px; height:1px; }
+@media(max-width:620px){ .chapters{right:7px;gap:9px;} #chapter{left:7vw;bottom:22px;} }
+
+#destinations {position:fixed;z-index:3;left:50%;top:54%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:flex-start;gap:14px;white-space:nowrap;}
+#destinations[hidden] {display:none;}
+#destinations a {text-decoration:none;font-size:clamp(30px,3vw,40px);font-weight:300;letter-spacing:-.04em;padding:10px 0;color:#dce4e6;transition:color .2s;}
+#destinations a:hover {color:white;}
+#destinations span {font-size:.43em;vertical-align:middle;margin-left:10px;color:#7c939c;}
+@media(max-width:620px){#destinations{flex-direction:column;align-items:flex-start;gap:14px;top:53%;}#destinations a{font-size:34px;}}

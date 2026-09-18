@@ -1,1 +1,12 @@
 .DS_Store
+tmp/
+
+# Original photos and local simulation outputs are not needed by the static site.
+/Photos/
+simulation/
+__pycache__/
+.venv-cfd/
+
+# Local rollback copies and an unrelated project stay outside this publication.
+versions/
+coal_world/

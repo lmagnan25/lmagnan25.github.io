@@ -1,0 +1,139 @@
+{
+  "dimension": [
+    80,
+    80,
+    192
+  ],
+  "order": "x fastest, y, axial z",
+  "temperature_file": "channel-temperature-f16.bin",
+  "temperature_storage": "IEEE754 float16 little endian",
+  "velocity_file": "channel-velocity.bin",
+  "velocity_storage": "float32 little endian",
+  "bounds_pitch_units": [
+    [
+      -0.5,
+      -0.5,
+      0
+    ],
+    [
+      0.5,
+      0.5,
+      6.0
+    ]
+  ],
+  "pitch_cm": 1.63,
+  "rod_radius_cm": 0.61,
+  "rod_centers_pitch_units": [
+    [
+      -0.5,
+      -0.5
+    ],
+    [
+      -0.5,
+      0.5
+    ],
+    [
+      0.5,
+      -0.5
+    ],
+    [
+      0.5,
+      0.5
+    ]
+  ],
+  "peclet_number": 80.0,
+  "peclet_definition": "mean axial speed * rod pitch / thermal diffusivity",
+  "temperature": "(T - inlet)/(wall - inlet)",
+  "velocity": "axial velocity / area-mean axial velocity",
+  "boundary_conditions": "No slip and theta=1 on rod arcs; zero normal derivative of u and theta on open symmetry sides; inlet theta=0.",
+  "equations": "-laplacian_xy(u)=constant; u*d(theta)/dz=laplacian_xy(theta)/Pe",
+  "method": "Cell-centered finite volume; staircase circular boundaries; implicit axial marching.",
+  "limitations": "Identical uniformly heated rods; steady, fully developed laminar axial flow and thermal entry. Constant properties; no axial conduction, transverse flow, turbulence, gravity, boiling or feedback. Not BWR operating conditions.",
+  "checks": {
+    "resolution_study": [
+      {
+        "grid": [
+          40,
+          40,
+          192
+        ],
+        "outlet_mixed_mean_temperature": 0.878314242446173,
+        "peak_to_mean_velocity": 2.0842487454095138,
+        "fluid_area_pitch_squared": 0.5575,
+        "analytic_fluid_area_pitch_squared": 0.5600185831605398,
+        "area_relative_error": 0.0044973206894774916,
+        "integrated_wall_heat": 0.4896601901637415,
+        "enthalpy_rise": 0.4896601901637415,
+        "wall_heat_enthalpy_relative_error": 0.0,
+        "velocity_symmetry_error": 0.0,
+        "momentum_residual": 8.304468224196171e-14,
+        "energy_residual": 1.1846990402575308e-13,
+        "bulk_temperature_monotonic": true
+      },
+      {
+        "grid": [
+          64,
+          64,
+          192
+        ],
+        "outlet_mixed_mean_temperature": 0.8746567665316113,
+        "peak_to_mean_velocity": 2.0833029830157903,
+        "fluid_area_pitch_squared": 0.5595703125,
+        "analytic_fluid_area_pitch_squared": 0.5600185831605398,
+        "area_relative_error": 0.0008004567598630156,
+        "integrated_wall_heat": 0.48943196017833646,
+        "enthalpy_rise": 0.4894319601783333,
+        "wall_heat_enthalpy_relative_error": 6.464914181388536e-15,
+        "velocity_symmetry_error": 0.0,
+        "momentum_residual": 3.126388037344441e-13,
+        "energy_residual": 3.700960978653134e-13,
+        "bulk_temperature_monotonic": true
+      },
+      {
+        "grid": [
+          80,
+          80,
+          192
+        ],
+        "outlet_mixed_mean_temperature": 0.8779621224290577,
+        "peak_to_mean_velocity": 2.0846516477804746,
+        "fluid_area_pitch_squared": 0.5581250000000001,
+        "analytic_fluid_area_pitch_squared": 0.5600185831605398,
+        "area_relative_error": 0.00338128629563144,
+        "integrated_wall_heat": 0.49001260958072096,
+        "enthalpy_rise": 0.49001260958071785,
+        "wall_heat_enthalpy_relative_error": 6.343968314632456e-15,
+        "velocity_symmetry_error": 0.0,
+        "momentum_residual": 4.313216450668733e-13,
+        "energy_residual": 5.708324438136181e-13,
+        "bulk_temperature_monotonic": true
+      },
+      {
+        "grid": [
+          80,
+          80,
+          384
+        ],
+        "outlet_mixed_mean_temperature": 0.878492106557803,
+        "peak_to_mean_velocity": 2.0846516477804746,
+        "fluid_area_pitch_squared": 0.5581250000000001,
+        "analytic_fluid_area_pitch_squared": 0.5600185831605398,
+        "area_relative_error": 0.00338128629563144,
+        "integrated_wall_heat": 0.490308406972573,
+        "enthalpy_rise": 0.49030840697257383,
+        "wall_heat_enthalpy_relative_error": 1.6982520728335053e-15,
+        "velocity_symmetry_error": 0.0,
+        "momentum_residual": 4.313216450668733e-13,
+        "energy_residual": 5.361544541671037e-13,
+        "bulk_temperature_monotonic": true
+      }
+    ],
+    "last_transverse_outlet_change": 0.003305355897446405,
+    "axial_refinement_outlet_change": 0.0005299841287452756,
+    "max_temperature_quantization_error": 0.000244140625
+  },
+  "sha256": {
+    "channel-temperature-f16.bin": "c413eb91a802e58d3c31055c8d45bdc3212414500b698c2a7487a5d4bc7f4c4b",
+    "channel-velocity.bin": "cf3244447c8337c73c07453cc35d520a5b82bf4f0efa08838750ae824e23073b"
+  }
+}

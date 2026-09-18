@@ -1,0 +1,28 @@
+{
+  "version": "2.2",
+  "source_scene": "1.1",
+  "duration_seconds": 24.966666666666665,
+  "fps": 30,
+  "frames": 749,
+  "audio": false,
+  "note": "Same recorded OpenMC positions and model dimensions. Mechanical assembly at 2x, gradual whole-image component entrances, rigid spacer seating, registered image crossfade of the completed vessel, close transport camera and fuel-lattice guides. Editorial clock and visibility-sized markers.",
+  "sha256": {
+    "assets/film/reactor.mp4": "4b2d3a5efbc5bb6a251225394b61138469ddbbcc77912e2de8ae2336fefb4f8b",
+    "assets/film/reactor-mobile.mp4": "aab14c5a3f684d9ffbbb2fe5b2541d94454e70fec71833e7fbc943352f89b25c",
+    "assets/film/poster.jpg": "bbc001062fe8319c08eabcf31e054c58f964d692320e6beab8367fafccb5684c",
+    "assets/bwr/xyz.bin": "8113f85e006e2d0ce1eb571226e1d9412e055b81e8f5459c7c426b0bf8ac4b82",
+    "assets/bwr/loge.bin": "c1ea48cbb3b02ecc896e7e48dad4f097235b520b1d7ead83cc0bc548f53781d5",
+    "assets/bwr/event.json": "4a14255593ef41842a3e57f49ad6913dd2b5a9120136e0c6251cf84737401923"
+  },
+  "presentation": {
+    "assembly_scene_range": [
+      0.125,
+      0.387
+    ],
+    "assembly_speed_multiplier": 2,
+    "neutron_clock_changed": false,
+    "fade": "registered whole-image crossfade .405-.465",
+    "guide": "1.63cm pin pitch, 8x8 per bundle, at spacer planes z=-30,0,30cm",
+    "entrances": "Staggered smooth fades of complete opaque renders; original part trajectories and physical dimensions retained."
+  }
+}

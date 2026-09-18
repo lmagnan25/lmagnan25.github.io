@@ -22,7 +22,7 @@ const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.08,4000);cam
 const composer=new EffectComposer(renderer);composer.addPass(new RenderPass(scene,camera));
 const bloom=new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),.65,.65,.5);composer.addPass(bloom);composer.addPass(new OutputPass());
 const entrances=createEntranceBlend(renderer,composer,innerWidth,innerHeight);
-const reactor=createBWR(scene,renderer,meta,{rigidSpacerArrival:true,assembledFade:true}),neutrons=await createNeutrons(scene,renderer);
+const reactor=createBWR(scene,renderer,meta,{rigidSpacerArrival:true,assembledFade:true,waterAnimation:false}),neutrons=await createNeutrons(scene,renderer);
 const grid=createFilmGrid(scene,meta);
   const shots = [
     {p:0, r:17, angle:-1.15, z:5, x:reactor.featured.x,y:reactor.featured.y,targetZ:0},
@@ -81,5 +81,11 @@ window.renderFilmFrame=(time)=>{
  entrances.render(p<.39?reactor.entranceLayers(p):[]);
  document.querySelector('canvas').dataset.progress=p.toFixed(5);
  return {p,alive};
+};
+// Capture the completed WebGL canvas directly for deterministic offline export.
+window.captureFilmFrame=(time,quality=.97)=>{
+ window.renderFilmFrame(time);
+ renderer.getContext().finish();
+ return renderer.domElement.toDataURL('image/jpeg',quality).split(',')[1];
 };
 window.renderFilmFrame(0);document.documentElement.dataset.ready='true';

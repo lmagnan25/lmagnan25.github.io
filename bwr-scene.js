@@ -190,7 +190,7 @@ export function createBWR(scene, renderer, meta, options={}) {
       }
     });
     const fill=ease(.37,.407,p), waterFade=1-ease(.405,.445,p);
-    fluid.visible=surface.visible=fill>.001;fluid.scale.z=Math.max(.001,145*fill);fluid.position.z=-70+145*fill/2;
+    fluid.visible=surface.visible=options.waterAnimation!==false&&fill>.001;fluid.scale.z=Math.max(.001,145*fill);fluid.position.z=-70+145*fill/2;
     fluidMat.opacity=.022*waterFade;surface.position.z=-70+145*fill;
     surfaceMat.uniforms.phase.value=p*6;surfaceMat.uniforms.gain.value=.25*waterFade;
     for(const m of[shellMat,wallMat,ringMat,rodMat,channelMat,spacerMat,tieMat,controlMat,supportMat,separatorMat,featuredSeparatorMat,pelletMat]){m.depthWrite=m.opacity>.98;}

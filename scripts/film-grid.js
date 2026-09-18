@@ -25,7 +25,7 @@ export function createFilmGrid(scene,meta){
  }
  const layers=[lines(cells,.095),lines(channels,.15)];
  return {update(p){
-  const reveal=ease(.465,.575,p)*(1-ease(...timing.neutronFade,p));
+  const reveal=ease(.465,.575,p)*(1-ease(...timing.vesselFade,p));
   group.visible=reveal>.001;
   for(const {material,opacity}of layers)material.opacity=opacity*reveal;
  }};

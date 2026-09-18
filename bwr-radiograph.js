@@ -10,7 +10,9 @@ export function createRadiograph(scene,meta,{shell,lids,fittings,separators,stru
   const m=new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.FrontSide,blending:THREE.AdditiveBlending,
    uniforms:{reveal:{value:0}},
    vertexShader:`varying vec3 n,v;void main(){vec4 mv=modelViewMatrix*vec4(position,1.);n=normalize(normalMatrix*normal);v=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}`,
-   fragmentShader:`uniform float reveal;varying vec3 n,v;void main(){float edge=pow(1.-abs(dot(normalize(n),normalize(v))),2.4);gl_FragColor=vec4(vec3(.38,.53,.64)*(${gain.toFixed(3)}*edge+.002),reveal);}`});
+   // Roundoff can put the dot product just above 1. A negative base raised to
+   // 2.4 becomes NaN, which the bloom blur spreads into large flashing blocks.
+   fragmentShader:`uniform float reveal;varying vec3 n,v;void main(){float facing=clamp(abs(dot(normalize(n),normalize(v))),0.,1.);float edge=pow(1.-facing,2.4);gl_FragColor=vec4(vec3(.38,.53,.64)*(${gain.toFixed(3)}*edge+.002),reveal);}`});
   materials.push(m);return m;
  }
  function copy(root,mat,select=()=>true){

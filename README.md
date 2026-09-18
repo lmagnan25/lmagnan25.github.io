@@ -37,10 +37,14 @@ guides. See the [2.1 notes](docs/version-2.1.md) and local
 rollback notes in `versions/README.md`. The original video-led **2.0** remains
 frozen in `versions/2.0/`; both earlier scroll versions also remain untouched.
 
-The current **2.2** adds gradual component entrances while preserving the 2.1
+The preserved **2.2** adds gradual component entrances while preserving the 2.1
 pacing, finished-vessel dissolve and neutron close-up. See the
 [2.2 notes](docs/version-2.2.md). Backups remain local and are excluded from
 GitHub Pages publication.
+
+The current **2.3** synchronizes the grid and vessel fade, removes the water
+level animation, and fixes flashing blocks in the radiograph shading. See the
+[2.3 notes](docs/version-2.3.md).
 
 ## Preview
 

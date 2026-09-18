@@ -26,8 +26,9 @@ catch { playwright = require(process.env.PLAYWRIGHT_MODULE || path.join(os.homed
     await page.waitForFunction(() => document.documentElement.dataset.ready === 'true');
     const {duration}=await page.evaluate(()=>window.filmConfig);
     const frames=Math.ceil(duration*fps);
-    await page.evaluate(() => window.renderFilmFrame(2));
-    await page.screenshot({path:path.join(staging,'poster.jpg'),type:'jpeg',quality:95});
+    const capture=async(time,quality=.97)=>Buffer.from(
+      await page.evaluate(([t,q])=>window.captureFilmFrame(t,q),[time,quality]),'base64');
+    fs.writeFileSync(path.join(staging,'poster.jpg'),await capture(2,.95));
     encoder = spawn('ffmpeg', ['-hide_banner','-loglevel','error','-y',
       '-f','image2pipe','-framerate',String(fps),'-vcodec','mjpeg','-i','pipe:0',
       '-vf',`fade=t=in:st=0:d=0.55,fade=t=out:st=${duration-.7}:d=0.7`,
@@ -36,8 +37,7 @@ catch { playwright = require(process.env.PLAYWRIGHT_MODULE || path.join(os.homed
       {stdio:['pipe','inherit','inherit']});
     const completion=once(encoder,'close');
     for (let frame=0;frame<frames;frame++) {
-      await page.evaluate(([t,d])=>window.renderFilmFrame(t,d),[frame/fps,duration]);
-      const image = await page.screenshot({type:'jpeg',quality:97});
+      const image = await capture(frame/fps);
       if (!encoder.stdin.write(image)) await once(encoder.stdin,'drain');
       if (frame % (fps*4) === 0) console.log(`Rendered ${frame/fps}/${duration} seconds`);
       if (errors.length) throw Error(errors.join('\n'));

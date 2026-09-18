@@ -1,5 +1,12 @@
 # Design notes
 
+## Version 2.3 — clean neutron ending
+
+- Fade the grid with the vessel; do not let it linger with the particles.
+- Remove the water-level animation from the film.
+- Fix the intermittent black blocks during the neutron close-up. Keep the
+  recorded tracks, camera arc and established pacing unchanged.
+
 ## Version 2.2 — smoother entrances
 
 - Fade arriving hardware in gradually along its existing motion. Avoid sudden

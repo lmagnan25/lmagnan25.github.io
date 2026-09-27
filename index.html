@@ -14,18 +14,17 @@
   <link rel="canonical" href="https://loicmagnan.com/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css?v=2">
-  <link rel="stylesheet" href="portfolio.css?v=2.0">
+  <link rel="stylesheet" href="portfolio.css?v=3.0">
 </head>
 <body class="portfolio-page">
-  <a class="skip-link" href="#cv">Skip to CV</a>
+  <a class="skip-link" href="#work">Skip to work</a>
   <main id="main">
     <section class="film-section" aria-labelledby="name">
       <header class="film-header">
         <h1 id="name">Loïc Magnan <span>- Engineer</span></h1>
         <nav aria-label="Main navigation">
-          <a href="#cv">CV</a>
-          <a href="#photography" data-select-tab="photography">Photography</a>
-          <a href="#projects" data-select-tab="projects">Projects</a>
+          <a href="cv.html">CV</a>
+          <a href="#photography">Photography</a>
         </nav>
       </header>
       <div class="film-frame">
@@ -36,26 +35,202 @@
         <p id="film-description" class="sr-only">A silent film made from the reactor visualization. Neutron paths use recorded OpenMC positions at the model's original scale; particle size and time are adjusted for visibility.</p>
       </div>
       <div class="film-controls">
-        <a href="#cv" aria-label="Continue to CV">CV <span aria-hidden="true">↓</span></a>
+        <a href="#work" aria-label="Explore projects and research">Explore <span aria-hidden="true">↓</span></a>
         <button id="film-toggle" type="button" aria-label="Play reactor film" hidden>Play <span aria-hidden="true">▶</span></button>
         <noscript><a href="assets/film/reactor.mp4">Play film <span aria-hidden="true">↗</span></a></noscript>
       </div>
+      <p class="intro-line">Chasing hard problems with AI.</p>
     </section>
-    <section id="cv" class="paper-section" aria-labelledby="cv-title">
-      <div class="paper-heading">
-        <h2 id="cv-title">CV</h2>
-        <a href="assets/Resume_Loic_Magnan.pdf" target="_blank" rel="noopener" aria-label="Open full CV PDF">PDF <span aria-hidden="true">↗</span></a>
+    <section class="work-row floating-work" id="work" aria-label="Projects and research">
+      <div class="bubble-list">
+          <details class="work-bubble" name="work" id="taurus">
+            <summary>
+              <span class="bubble-surface" aria-hidden="true"></span>
+              <span class="bubble-title">Taurus</span>
+              <span class="bubble-action" aria-hidden="true"><span class="bubble-close-label">Close</span><span class="bubble-symbol">+</span></span>
+            </summary>
+            <div class="bubble-content project-content taurus-content">
+              <p class="project-role">Co-Developer</p>
+              <ul class="project-description">
+                <li>Taurus is an algorithmic trade origination, execution, and risk management platform.</li>
+                <li>It has comprehensive front, middle, and back office agentic systems.</li>
+                <li>The system incorporates data feeds, web scrapers, Graph RAGs, multiple agents with constitutions, and proprietary DCF and Black–Scholes models to screen options.</li>
+                <li>Currently, it is actively managed; the cash-settled put and covered call trades are the best performing feature.</li>
+              </ul>
+              <div class="project-gallery" data-gallery="Taurus screenshots" aria-label="Taurus screenshots">
+                <figure class="project-screen project-screen-featured">
+                  <a class="photo-link" href="assets/projects/taurus/trade-timing.png" data-title="Taurus — Trade timing" aria-label="Enlarge Taurus trade timing screenshot">
+                    <img src="assets/projects/taurus/trade-timing.png" width="2330" height="1160" alt="Taurus trade timing view with an ANET price chart, statistical bands, dealer levels, and level-by-level analysis." loading="lazy" decoding="async">
+                  </a>
+                  <figcaption>Trade timing <span aria-hidden="true">↗</span></figcaption>
+                </figure>
+                <figure class="project-screen">
+                  <a class="photo-link" href="assets/projects/taurus/valuation.png" data-title="Taurus — Valuation" aria-label="Enlarge Taurus valuation screenshot">
+                    <img src="assets/projects/taurus/valuation.png" width="2282" height="1018" alt="Taurus valuation table comparing market prices, house estimates, consensus targets, and implied growth." loading="lazy" decoding="async">
+                  </a>
+                  <figcaption>Valuation <span aria-hidden="true">↗</span></figcaption>
+                </figure>
+                <figure class="project-screen">
+                  <a class="photo-link" href="assets/projects/taurus/screening.png" data-title="Taurus — Screening" aria-label="Enlarge Taurus screening screenshot">
+                    <img src="assets/projects/taurus/screening.png" width="2514" height="1064" alt="Taurus screening view showing SMCI price and moving averages alongside valuation, growth, and momentum scores." loading="lazy" decoding="async">
+                  </a>
+                  <figcaption>Screening <span aria-hidden="true">↗</span></figcaption>
+                </figure>
+              </div>
+            </div>
+          </details>
+          <details class="work-bubble" name="work" id="atlas">
+            <summary>
+              <span class="bubble-surface" aria-hidden="true"></span>
+              <span class="bubble-title">ATLAS</span>
+              <span class="bubble-action" aria-hidden="true"><span class="bubble-close-label">Close</span><span class="bubble-symbol">+</span></span>
+            </summary>
+            <div class="bubble-content project-content atlas-content">
+              <p class="project-role">Designer and Developer</p>
+              <ul class="project-description">
+                <li>ATLAS is the proprietary intelligence layer for Subcritical Systems.</li>
+                <li>I designed and developed the current version, which features 3D capabilities, project planning, as well as regulatory and EPC functionality.</li>
+                <li>This system is now maintained by 5 engineers and is functional.</li>
+              </ul>
+              <div class="project-gallery atlas-gallery" data-gallery="ATLAS project images" aria-label="ATLAS project images">
+                <figure class="project-screen project-screen-featured">
+                  <a class="photo-link" href="assets/projects/atlas/radiation-analysis.png" data-title="ATLAS — Radiation analysis" aria-label="Enlarge ATLAS radiation analysis">
+                    <img src="assets/projects/atlas/radiation-analysis.png" width="1062" height="700" alt="Radiation dose-rate cross-section with a logarithmic color scale and facility outlines." loading="lazy" decoding="async">
+                  </a>
+                  <figcaption>Radiation analysis <span aria-hidden="true">↗</span></figcaption>
+                </figure>
+                <figure class="project-screen">
+                  <a class="photo-link" href="assets/projects/atlas/facility-model.png" data-title="ATLAS — 3D facility model" aria-label="Enlarge ATLAS 3D facility model">
+                    <img src="assets/projects/atlas/facility-model.png" width="2168" height="1296" alt="A detailed 3D facility model with structural beams, service lines, equipment, and an access stairway." loading="lazy" decoding="async">
+                  </a>
+                  <figcaption>3D facility model <span aria-hidden="true">↗</span></figcaption>
+                </figure>
+              </div>
+            </div>
+          </details>
+          <details class="work-bubble" name="work" id="ntp">
+            <summary>
+              <span class="bubble-surface" aria-hidden="true"></span>
+              <span class="bubble-title">NTP</span>
+              <span class="bubble-action" aria-hidden="true"><span class="bubble-close-label">Close</span><span class="bubble-symbol">+</span></span>
+            </summary>
+            <div class="bubble-content project-content ntp-content">
+              <p class="project-role">Co-Author</p>
+              <ul class="project-description">
+                <li>I co-authored a paper about the regulatory feasibility of atmospheric testing of nuclear thermal propulsion rockets.</li>
+                <li>This is an end-to-end study including neutronics, erosion, and atmospheric dispersion.</li>
+                <li>We presented it at NETS 2026.</li>
+              </ul>
+              <p class="project-publication"><a href="https://www.researchgate.net/publication/404384324_Regulatory_Feasibility_of_Contemporary_Atmospheric_NTP_Testing" target="_blank" rel="noopener noreferrer">Read the paper on ResearchGate <span aria-hidden="true">↗</span></a></p>
+              <div class="project-gallery" data-gallery="NTP research figures" aria-label="NTP research figures">
+                <figure class="project-screen project-screen-featured">
+                  <a class="photo-link" href="assets/projects/ntp/study-overview.png" data-title="NTP — Study overview" aria-label="Enlarge NTP study overview">
+                    <img src="assets/projects/ntp/study-overview.png" width="1556" height="482" alt="Diagram of radionuclide release mechanisms and the study workflow, from neutronics and erosion modeling to atmospheric dispersion and dose analysis." loading="lazy" decoding="async">
+                  </a>
+                  <figcaption>Study overview <span aria-hidden="true">↗</span></figcaption>
+                </figure>
+                <figure class="project-screen">
+                  <a class="photo-link" href="assets/projects/ntp/dose-analysis.png" data-title="NTP — Dose analysis" aria-label="Enlarge NTP dose analysis">
+                    <img src="assets/projects/ntp/dose-analysis.png" width="690" height="454" alt="Logarithmic plot of effective dose against coated fuel particle failure fraction, with temperature curves and a marked DOE dose limit." loading="lazy" decoding="async">
+                  </a>
+                  <figcaption>Dose analysis <span aria-hidden="true">↗</span></figcaption>
+                </figure>
+                <figure class="project-screen">
+                  <a class="photo-link" href="assets/projects/ntp/coolant-channel.png" data-title="NTP — Coolant channel" aria-label="Enlarge NTP coolant channel diagram">
+                    <img src="assets/projects/ntp/coolant-channel.png" width="606" height="516" alt="Cross-section of a hydrogen coolant channel with zirconium carbide cladding, coated fuel particles, and a graphite moderator." loading="lazy" decoding="async">
+                  </a>
+                  <figcaption>Coolant channel <span aria-hidden="true">↗</span></figcaption>
+                </figure>
+              </div>
+            </div>
+          </details>
+          <details class="work-bubble" name="work" id="ads">
+            <summary>
+              <span class="bubble-surface" aria-hidden="true"></span>
+              <span class="bubble-title">ADS</span>
+              <span class="bubble-action" aria-hidden="true"><span class="bubble-close-label">Close</span><span class="bubble-symbol">+</span></span>
+            </summary>
+            <div class="bubble-content project-content ads-content">
+              <p class="project-role">Research Contributor</p>
+              <ul class="project-description">
+                <li>I was responsible for the high-energy physics simulations using FLUKA for this accelerator-driven system neutronics study.</li>
+                <li>I also contribute to burnup analysis in Professor Kozlowski’s research group, studying how the fuel composition changes as the system operates.</li>
+              </ul>
+              <div class="project-gallery" data-gallery="ADS research figures" aria-label="ADS research figures">
+                <figure class="project-screen project-screen-featured">
+                  <a class="photo-link" href="assets/projects/ads/heat-generation.png" data-title="ADS — Volumetric heat generation" aria-label="Enlarge ADS volumetric heat generation plot">
+                    <img src="assets/projects/ads/heat-generation.png" width="2012" height="1652" alt="Three-dimensional plot of volumetric heat generation from a 1 GeV proton beam as a function of radial and axial position." loading="lazy" decoding="async">
+                  </a>
+                  <figcaption>Volumetric heat generation <span aria-hidden="true">↗</span></figcaption>
+                </figure>
+                <figure class="project-screen">
+                  <a class="photo-link" href="assets/projects/ads/neutron-source.png" data-title="ADS — FLUKA neutron source" aria-label="Enlarge FLUKA neutron source energy plot">
+                    <img src="assets/projects/ads/neutron-source.png" width="1505" height="925" alt="FLUKA neutron source energy tally from 1 GeV proton spallation, plotted as a histogram of neutron energies." loading="lazy" decoding="async">
+                  </a>
+                  <figcaption>FLUKA neutron source <span aria-hidden="true">↗</span></figcaption>
+                </figure>
+                <figure class="project-screen">
+                  <a class="photo-link figure-on-white" href="assets/projects/ads/system-design.png" data-title="ADS — System design" aria-label="Enlarge accelerator-driven system design">
+                    <img src="assets/projects/ads/system-design.png" width="1544" height="675" alt="Lead-based accelerator-driven system geometry and isotope composition, with a central proton beam and spallation target." loading="lazy" decoding="async">
+                  </a>
+                  <figcaption>System design <span aria-hidden="true">↗</span></figcaption>
+                </figure>
+              </div>
+            </div>
+          </details>
+          <details class="work-bubble" name="work" id="agentic-systems">
+            <summary>
+              <span class="bubble-surface" aria-hidden="true"></span>
+              <span class="bubble-title">Agentic System Research</span>
+              <span class="bubble-action" aria-hidden="true"><span class="bubble-close-label">Close</span><span class="bubble-symbol">+</span></span>
+            </summary>
+            <div class="bubble-content project-content agentic-content">
+              <p class="project-role">Research in Progress</p>
+              <ul class="project-description">
+                <li>I am currently working with Ian Burges and Matt Burges at Ascendance Foundry on research into multi-agent systems.</li>
+                <li>The goal of the study is to quantify entropy in multi-agent systems in order to develop a playbook for minimizing error.</li>
+              </ul>
+              <div class="project-gallery" data-gallery="Agentic System Research" aria-label="Agentic System Research">
+                <figure class="project-screen project-screen-featured">
+                  <a class="photo-link" href="assets/projects/agentic-systems/error-propagation.png" data-title="Agentic System Research — Error propagation" aria-label="Enlarge the agentic systems error propagation diagram">
+                    <img src="assets/projects/agentic-systems/error-propagation.png" width="1244" height="588" alt="Three events show an error entering a sub-agent's report, contaminating shared memory, and later returning as a working error when another question retrieves it." loading="lazy" decoding="async">
+                  </a>
+                  <figcaption>Error propagation through shared memory <span aria-hidden="true">↗</span></figcaption>
+                </figure>
+              </div>
+              <section class="model-preview" aria-labelledby="agentic-model-title">
+                <h3 id="agentic-model-title">Model preview</h3>
+                <div class="model-states">
+                  <p><var>e</var> is the fraction of active work that is contaminated.</p>
+                  <p><var>m</var> is the fraction of memory that is contaminated.</p>
+                </div>
+                <div class="model-equations">
+                  <math display="block" aria-label="d e over d t equals alpha times one minus e plus gamma m times one minus e minus beta e">
+                    <mfrac><mrow><mi mathvariant="normal">d</mi><mi>e</mi></mrow><mrow><mi mathvariant="normal">d</mi><mi>t</mi></mrow></mfrac>
+                    <mo>=</mo><mi>α</mi><mo>(</mo><mn>1</mn><mo>−</mo><mi>e</mi><mo>)</mo>
+                    <mo>+</mo><mi>γ</mi><mi>m</mi><mo>(</mo><mn>1</mn><mo>−</mo><mi>e</mi><mo>)</mo>
+                    <mo>−</mo><mi>β</mi><mi>e</mi>
+                  </math>
+                  <math display="block" aria-label="d m over d t equals delta e times one minus m minus epsilon m">
+                    <mfrac><mrow><mi mathvariant="normal">d</mi><mi>m</mi></mrow><mrow><mi mathvariant="normal">d</mi><mi>t</mi></mrow></mfrac>
+                    <mo>=</mo><mi>δ</mi><mi>e</mi><mo>(</mo><mn>1</mn><mo>−</mo><mi>m</mi><mo>)</mo>
+                    <mo>−</mo><mi>ε</mi><mi>m</mi>
+                  </math>
+                </div>
+                <dl class="model-rates">
+                  <dt><var>α</var></dt><dd>The rate of new mistakes in the work.</dd>
+                  <dt><var>β</var></dt><dd>The correction rate of new mistakes.</dd>
+                  <dt><var>γ</var></dt><dd>The rate at which contaminated memory causes active working errors.</dd>
+                  <dt><var>δ</var></dt><dd>The rate at which wrong active work contaminates memory.</dd>
+                  <dt><var>ε</var></dt><dd>The rate at which errors in memory are corrected.</dd>
+                </dl>
+              </section>
+            </div>
+          </details>
       </div>
-      <a class="cv-paper" href="assets/Resume_Loic_Magnan.pdf" target="_blank" rel="noopener" aria-label="Open Loïc Magnan’s CV PDF to read, zoom or print">
-        <img src="assets/cv/resume.webp" width="1855" height="2400" alt="Loïc Magnan’s CV: education, experience, publications and additional information." loading="lazy" decoding="async">
-      </a>
     </section>
-    <section class="work-section" id="work" aria-label="Photography and projects">
-      <div class="work-tabs" role="tablist" aria-label="Selected work">
-        <button id="photography-tab" type="button" role="tab" aria-selected="true" aria-controls="photography" tabindex="0">Photography</button>
-        <button id="projects-tab" type="button" role="tab" aria-selected="false" aria-controls="projects" tabindex="-1">Projects</button>
-      </div>
-      <div id="photography" role="tabpanel" aria-labelledby="photography-tab" tabindex="0">
+    <section class="photography-section" id="photography" aria-labelledby="photography-title">
+      <h2 id="photography-title">Photography</h2>
     <div class="photo-grid" aria-label="Selected photographs">
       <figure class="photo">
         <a class="photo-link" href="assets/photos/IMG_3176-1600.webp" data-title="Reactor pool" aria-label="Open photograph 1: Reactor pool">
@@ -103,11 +278,8 @@
         </a>
       </figure>
     </div>
-      </div>
-      <div id="projects" role="tabpanel" aria-labelledby="projects-tab" tabindex="0" hidden>
-        <!-- Reserved for finished projects. No placeholder cards or filler. -->
-      </div>
     </section>
+    <footer class="portfolio-footer"><a href="cv.html">CV <span aria-hidden="true">↗</span></a></footer>
   </main>
   <dialog id="photo-viewer" class="photo-viewer" aria-label="Photo viewer">
     <div class="viewer-layout">
@@ -122,7 +294,10 @@
       <p class="viewer-status" role="status" aria-live="polite"></p>
     </div>
   </dialog>
-  <script src="portfolio.js?v=2.0" defer></script>
-  <script src="gallery.js?v=2" defer></script>
+  <script src="portfolio.js?v=3.0" defer></script>
+  <script src="bubble-engine.js?v=3.0" defer></script>
+  <script src="bubble-motion.js?v=3.0" defer></script>
+  <script src="work-bubbles.js?v=3.0" defer></script>
+  <script src="gallery.js?v=3.0" defer></script>
 </body>
 </html>

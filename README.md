@@ -4,9 +4,15 @@ A minimal static personal website for <https://loicmagnan.com/>.
 
 ## Pages
 
-- `index.html`: video-led portfolio. Name above a reactor film, a printed CV,
-  then Photography and Projects tabs on the same page.
-- `projects.html`: empty until project content is supplied.
+- `index.html`: video-led portfolio with a short introduction, expanding
+  Projects and Research bubbles, then the existing photography gallery.
+- `work-bubbles.js`: in-place expansion, collapse and Escape handling. The
+  underlying native `details` elements also work without JavaScript.
+- `bubble-engine.js`: procedurally rendered, gently rotating soap-film rims.
+  The outline grows in pixel space while text and images retain their proportions.
+  Motion pauses offscreen and in hidden tabs; reduced-motion mode stays still.
+  See [rendering references and review](docs/bubble-rendering.md).
+- `projects.html`: legacy page; navigation now points to the homepage’s work section.
 - `cv.html`: CV summary and the selected, unchanged `Resume_Loic_Magnan.pdf`.
 - `photography.html`: nine photographs, without visible captions or counts.
 - `reactor.html`: retained cinematic BWR scroll experiment. Scroll from fuel assembly
@@ -42,9 +48,28 @@ pacing, finished-vessel dissolve and neutron close-up. See the
 [2.2 notes](docs/version-2.2.md). Backups remain local and are excluded from
 GitHub Pages publication.
 
-The current **2.3** synchronizes the grid and vessel fade, removes the water
+The preserved **2.3** synchronizes the grid and vessel fade, removes the water
 level animation, and fixes flashing blocks in the radiograph shading. See the
 [2.3 notes](docs/version-2.3.md).
+
+Version **3.0** has the video, introduction, a shared field of five
+floating bubbles, Photography, and a separate CV page. Bubbles travel freely
+within the shared field with slow drift, lingering contact and gentle surface
+wobble. Hover or keyboard focus holds a bubble still. There is no motion
+button; reduced motion uses a static layout. Click a bubble to expand its own shape into a
+steady text-and-image area; click its heading again or press Escape to close.
+Only one bubble opens at a time. Taurus includes Loïc's
+co-developer credit, project description and three original screenshots, with
+its own image-viewer group. ATLAS includes Loïc's description and two
+user-selected images (radiation analysis and a 3D facility model), in a separate
+viewer group. NTP includes Loïc's research description, three supplied figures
+and a ResearchGate paper link. ADS includes his FLUKA and burnup contribution,
+with the user-selected heat-generation plot featured above the neutron source
+and system design figures. Agentic System Research includes the ongoing collaboration,
+error propagation diagram, and a typeset two-state contamination model with rate
+definitions. Projects and Research were removed from the top navigation. The CV is
+available on its separate page and is no longer embedded on the homepage.
+The reactor film and frozen versions are unchanged.
 
 ## Preview
 

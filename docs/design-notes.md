@@ -1,5 +1,65 @@
 # Design notes
 
+## Version 3.0 — September 27, 2026
+
+- The notebook layout evolved into name and navigation, reactor film, short
+  introduction, one freely floating field, existing photo gallery, CV link.
+  Loïc requested removing the Projects and Research navigation and allowing
+  all bubbles to move together without separate category rows.
+- Motion follows a slow lava-lamp direction: low drift speeds, spring contact,
+  shared boundaries that bend without crossing, and a lingering wobble. The
+  separate Pause motion button was removed at Loïc’s request. Hover/focus
+  still holds a target, and reduced-motion preferences use the static layout.
+- The approved introduction is “Chasing hard problems with AI.”
+- Projects are no longer a tab beside photography. Each draft project/research
+  label sits inside an organic, softly colored bubble. Clicking it expands the
+  same shape within the page to hold description text and images.
+- All five entries now use user-supplied descriptions and figures. Preserve
+  his full sentences, correcting spelling and grammar without adding claims.
+- The CV lives on `cv.html`, reached through CV links. No embedded resume on
+  the homepage. Preserve the existing film, gallery and earlier versions.
+- Native disclosures support keyboard activation; Escape closes the focused
+  open bubble. One bubble opens at once. Reduced-motion mode uses a static
+  grid and skips the morph animation. Expanded content stays in normal flow
+  with images stacking vertically on phones.
+- Loïc requested publishing this revision on September 27, 2026.
+- Taurus now includes Loïc's co-developer credit, his supplied project bullets
+  and three screenshots (valuation, trade timing, screening). The wording
+  "cash-settled puts" was explicitly confirmed. Screenshots keep their full
+  aspect ratios and open in a separate viewer group from the photo gallery.
+  Preserve the user-approved bubble renderer while adding project content.
+- ATLAS uses Loïc's three full sentences with spelling/grammar fixes. Its
+  gallery uses his two selected images: radiation analysis first, followed by
+  a 3D facility model. They replace the earlier megafolder selections; original
+  paths are recorded in `assets/projects/atlas/SOURCE.md`. The Next project
+  placeholder was removed. Developer is capitalized in the project credits.
+- NTP includes Loïc's co-authorship description and NETS 2026 presentation,
+  with a link to the ResearchGate paper. The study overview is the main figure,
+  followed by dose analysis and a coolant-channel diagram. Original supplied
+  screenshots are preserved, with paths in `assets/projects/ntp/SOURCE.md`.
+- ADS credits his FLUKA high-energy simulations and ongoing burnup assistance
+  in Professor Kozlowski's group. His heat-generation screenshot is the main
+  image; neutron-source and lead-based system design figures were extracted
+  from the supplied research poster. The bottom-right burnup plot was removed.
+- Agentic System Research describes the collaboration with Ian Burges and Matt Burges
+  at Ascendance Foundry. It includes the supplied error propagation diagram,
+  native MathML equations, and definitions for e, m and five rate coefficients.
+  The pasted rate symbols were missing; α, β, γ, δ, ε label the five rates in
+  the supplied order following the clarification in the chat.
+- Latest bubble direction: digital, delicate, pale color concentrated at the
+  outer rim, with clear centers. The photographic/chrome approach was rejected.
+  The renderer now calculates a new contour and its thin-film rim each frame;
+  it never stretches an image to make the expanded surface.
+- Each bubble has its own size, color phase, spin direction, and spring motion.
+  Shape growth leads content opacity; text and image slots are normal HTML and
+  never scaled. Open bubbles become softly squared organic reading spaces.
+  The added motion layer moves whole closed bubbles. Soft contacts flatten
+  the membrane at a shared plane and create a small bulge beside the contact.
+  Preserve the approved iridescent material and keep expanded content steady.
+- Sources, implementation rationale, and the visual audit are recorded in
+  `docs/bubble-rendering.md`. The earlier photographic experiment is retained
+  only in the ignored local `tmp/bubble-iterations/` directory.
+
 ## Version 2.3 — clean neutron ending
 
 - Fade the grid with the vessel; do not let it linger with the particles.

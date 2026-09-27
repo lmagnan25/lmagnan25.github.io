@@ -9,4 +9,5 @@ __pycache__/
 
 # Local rollback copies and an unrelated project stay outside this publication.
 versions/
+/Website_Versions/
 coal_world/

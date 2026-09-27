@@ -1,7 +1,8 @@
 (() => {
   const viewer = document.querySelector('#photo-viewer');
-  const photos = Array.from(document.querySelectorAll('.photo-link'));
-  if (!viewer || !photos.length || typeof viewer.showModal !== 'function') return;
+  const links = Array.from(document.querySelectorAll('.photo-link'));
+  if (!viewer || !links.length || typeof viewer.showModal !== 'function') return;
+  let photos = links;
 
   const frame = viewer.querySelector('.viewer-frame');
   const fullImage = viewer.querySelector('.viewer-image');
@@ -9,22 +10,24 @@
   const close = viewer.querySelector('.viewer-close');
   const stage = viewer.querySelector('.viewer-stage');
   let current = 0;
+  let renderRevision = 0;
   let opener;
   let touchStart = null;
 
   function render(index) {
+    const revision = ++renderRevision;
     current = (index + photos.length) % photos.length;
     const photo = photos[current];
     const thumbnail = photo.querySelector('img');
     const title = photo.dataset.title;
     frame.classList.toggle('screenshot', photo.classList.contains('screenshot'));
+    frame.classList.toggle('figure-on-white', photo.classList.contains('figure-on-white'));
     fullImage.alt = thumbnail.alt;
     // Set the small, already-decoded preview immediately; upgrade it in place.
     fullImage.src = thumbnail.currentSrc || thumbnail.src;
-    const selected = current;
     const highResolution = new Image();
     highResolution.onload = () => {
-      if (selected === current && viewer.open) fullImage.src = highResolution.src;
+      if (revision === renderRevision && viewer.open) fullImage.src = highResolution.src;
     };
     highResolution.src = photo.href;
     status.textContent = `${current + 1} of ${photos.length}: ${title}`;
@@ -33,11 +36,18 @@
     next.src = photos[(current + 1) % photos.length].href;
   }
 
-  photos.forEach((photo, index) => {
+  links.forEach(photo => {
     photo.addEventListener('click', event => {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
+      const group = photo.closest('[data-gallery]');
+      photos = links.filter(link => link.closest('[data-gallery]') === group);
+      const index = photos.indexOf(photo);
       opener = photo;
+      viewer.setAttribute('aria-label', group?.dataset.gallery || 'Photo viewer');
+      close.setAttribute('aria-label', group ? 'Close image viewer' : 'Close photo viewer');
+      viewer.querySelector('[data-direction="previous"]').setAttribute('aria-label', group ? 'Previous image' : 'Previous photograph');
+      viewer.querySelector('[data-direction="next"]').setAttribute('aria-label', group ? 'Next image' : 'Next photograph');
       viewer.showModal();
       document.body.classList.add('viewer-open');
       render(index);

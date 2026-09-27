@@ -1,5 +1,23 @@
 # Design notes
 
+## Version 3.1 polish — September 27, 2026
+
+- Reviewed the opening film, expanded work, photography, image viewer and CV
+  across desktop and phone layouts. Preserve the accepted bubble appearance,
+  motion, project wording, images and film.
+- Match the secondary pages to the homepage’s background, name sizing and
+  content width. Remove the leftover Projects navigation item. Keep navigation
+  and PDF download targets comfortable to tap.
+- Redirect the empty legacy Projects page and former project/research hashes
+  to the shared work section. Use the approved introduction in share metadata.
+- Hide gallery arrows when there is only one image. Fit a transparent diagram’s
+  white background to its original proportions. Reserve the scrollbar gutter
+  to prevent horizontal movement when the image viewer opens.
+- Give wrapped figure captions a consistent line height and space before their
+  arrow, and keep the long research label compact in static phone layouts too.
+- Only keyboard-visible focus holds a bubble after hover ends, so mouse clicks
+  do not leave closed bubbles parked indefinitely.
+
 ## Version 3.0 — September 27, 2026
 
 - The notebook layout evolved into name and navigation, reactor film, short

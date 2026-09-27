@@ -9,6 +9,7 @@
   const status = viewer.querySelector('.viewer-status');
   const close = viewer.querySelector('.viewer-close');
   const stage = viewer.querySelector('.viewer-stage');
+  const controls = viewer.querySelector('.viewer-controls');
   let current = 0;
   let renderRevision = 0;
   let opener;
@@ -22,6 +23,9 @@
     const title = photo.dataset.title;
     frame.classList.toggle('screenshot', photo.classList.contains('screenshot'));
     frame.classList.toggle('figure-on-white', photo.classList.contains('figure-on-white'));
+    const imageWidth = thumbnail.naturalWidth || Number(thumbnail.getAttribute('width'));
+    const imageHeight = thumbnail.naturalHeight || Number(thumbnail.getAttribute('height'));
+    frame.style.setProperty('--image-ratio', imageWidth / imageHeight || 1);
     fullImage.alt = thumbnail.alt;
     // Set the small, already-decoded preview immediately; upgrade it in place.
     fullImage.src = thumbnail.currentSrc || thumbnail.src;
@@ -42,6 +46,7 @@
       event.preventDefault();
       const group = photo.closest('[data-gallery]');
       photos = links.filter(link => link.closest('[data-gallery]') === group);
+      controls.hidden = photos.length < 2;
       const index = photos.indexOf(photo);
       opener = photo;
       viewer.setAttribute('aria-label', group?.dataset.gallery || 'Photo viewer');
@@ -59,7 +64,7 @@
   viewer.querySelector('[data-direction="previous"]').addEventListener('click', () => render(current - 1));
   viewer.querySelector('[data-direction="next"]').addEventListener('click', () => render(current + 1));
   viewer.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    if (photos.length > 1 && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
       event.preventDefault();
       render(current + (event.key === 'ArrowRight' ? 1 : -1));
     }
@@ -78,7 +83,7 @@
     if (!touchStart || !event.changedTouches.length) return;
     const dx = event.changedTouches[0].clientX - touchStart.x;
     const dy = event.changedTouches[0].clientY - touchStart.y;
-    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.5) render(current + (dx < 0 ? 1 : -1));
+    if (photos.length > 1 && Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.5) render(current + (dx < 0 ? 1 : -1));
     touchStart = null;
   }, { passive: true });
   stage.addEventListener('touchcancel', () => { touchStart = null; }, { passive: true });

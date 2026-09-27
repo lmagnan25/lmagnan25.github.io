@@ -9,7 +9,7 @@
   const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
 
   function held(body) {
-    return body.hovered || body.element.contains(document.activeElement);
+    return body.hovered || (body.element.contains(document.activeElement) && document.activeElement.matches(':focus-visible'));
   }
 
   function impact(body, nx, ny, speed) {

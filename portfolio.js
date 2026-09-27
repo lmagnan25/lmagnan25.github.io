@@ -1,4 +1,13 @@
 (() => {
+  // Preserve links to the old tab layout without leaving visitors at the top.
+  function restoreWorkLink() {
+    if (!['#projects', '#research'].includes(location.hash)) return;
+    history.replaceState(null, '', `${location.pathname}${location.search}#work`);
+    document.querySelector('#work').scrollIntoView({ behavior:'instant' });
+  }
+  addEventListener('hashchange', restoreWorkLink);
+  restoreWorkLink();
+
   const video=document.querySelector('#reactor-film');
   const toggle=document.querySelector('#film-toggle');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');

@@ -12,7 +12,7 @@ A minimal static personal website for <https://loicmagnan.com/>.
   The outline grows in pixel space while text and images retain their proportions.
   Motion pauses offscreen and in hidden tabs; reduced-motion mode stays still.
   See [rendering references and review](docs/bubble-rendering.md).
-- `projects.html`: legacy page; navigation now points to the homepage’s work section.
+- `projects.html`: legacy address that redirects to the homepage’s work section.
 - `cv.html`: CV summary and the selected, unchanged `Resume_Loic_Magnan.pdf`.
 - `photography.html`: nine photographs, without visible captions or counts.
 - `reactor.html`: retained cinematic BWR scroll experiment. Scroll from fuel assembly
@@ -72,6 +72,12 @@ available on its separate page and is no longer embedded on the homepage.
 The reactor film and frozen versions are unchanged.
 
 ## Preview
+
+Version **3.1** polishes shared navigation, header sizing, phone labels and image
+viewing. Single-image galleries omit navigation arrows; transparent research
+figures get a white background only behind the image. Legacy project links lead
+to the floating work section. Pointer focus no longer holds a closed bubble
+after the pointer leaves; keyboard focus still does.
 
 Run from this directory:
 

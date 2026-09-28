@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Chasing hard problems with AI. Engineering projects, research, and photography by Loïc Magnan.">
+  <meta name="description" content="Solving hard problems with AI. Engineering projects, research, and photography by Loïc Magnan.">
   <meta name="theme-color" content="#080a0b">
   <meta property="og:title" content="Loïc Magnan - Engineer">
-  <meta property="og:description" content="Chasing hard problems with AI. Engineering projects, research, and photography by Loïc Magnan.">
+  <meta property="og:description" content="Solving hard problems with AI. Engineering projects, research, and photography by Loïc Magnan.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://loicmagnan.com/">
   <meta property="og:image" content="https://loicmagnan.com/assets/photos/IMG_3176-960.webp">
@@ -14,16 +14,41 @@
   <link rel="canonical" href="https://loicmagnan.com/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css?v=3.1">
-  <link rel="stylesheet" href="portfolio.css?v=3.1">
+  <link rel="stylesheet" href="portfolio.css?v=3.2">
 </head>
 <body class="portfolio-page">
   <a class="skip-link" href="#work">Skip to work</a>
   <main id="main">
     <section class="film-section" aria-labelledby="name">
       <header class="film-header">
-        <h1 id="name">Loïc Magnan <span>- Engineer</span></h1>
+        <h1 id="name" class="bubble-wordmark">
+          <span class="sr-only">Loïc Magnan</span>
+          <svg class="name-film" viewBox="0 0 282 62" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="name-film-rim" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#d7ecf3"/>
+                <stop offset=".22" stop-color="#c3b2d7"/>
+                <stop offset=".42" stop-color="#8daebb"/>
+                <stop offset=".65" stop-color="#bdd3c6"/>
+                <stop offset=".83" stop-color="#d5a9c4"/>
+                <stop offset="1" stop-color="#bcd9ec"/>
+              </linearGradient>
+              <linearGradient id="name-film-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#d7e9ed" stop-opacity=".32"/>
+                <stop offset=".48" stop-color="#adc6d0" stop-opacity=".025"/>
+                <stop offset="1" stop-color="#b8cbd7" stop-opacity=".17"/>
+              </linearGradient>
+              <filter id="name-film-soft" x="-10%" y="-30%" width="120%" height="160%">
+                <feGaussianBlur stdDeviation=".7"/>
+              </filter>
+              <text id="name-film-text" x="4" y="46">Loïc Magnan</text>
+            </defs>
+            <use href="#name-film-text" class="name-film-halo"/>
+            <use href="#name-film-text" class="name-film-face"/>
+          </svg>
+          <span class="name-role">- Engineer</span>
+        </h1>
         <nav aria-label="Main navigation">
-          <a href="cv.html">CV</a>
           <a href="#photography">Photography</a>
         </nav>
       </header>
@@ -39,10 +64,28 @@
         <button id="film-toggle" type="button" aria-label="Play reactor film" hidden>Play <span aria-hidden="true">▶</span></button>
         <noscript><a href="assets/film/reactor.mp4">Play film <span aria-hidden="true">↗</span></a></noscript>
       </div>
-      <p class="intro-line">Chasing hard problems with AI.</p>
+      <p class="intro-line">Solving hard problems with AI.</p>
     </section>
     <section class="work-row floating-work" id="work" aria-label="Projects and research">
       <div class="bubble-list">
+          <details class="work-bubble" name="work" id="atlas">
+            <summary>
+              <span class="bubble-surface" aria-hidden="true"></span>
+              <span class="bubble-title">ATLAS</span>
+              <span class="bubble-action" aria-hidden="true"><span class="bubble-close-label">Close</span><span class="bubble-symbol">+</span></span>
+            </summary>
+            <div class="bubble-content project-content atlas-content">
+              <p class="project-role">Designer and Developer</p>
+              <ul class="project-description">
+                <li>ATLAS is the proprietary intelligence layer for Subcritical Systems.</li>
+                <li>I built the second generation of ATLAS, with 3D capabilities, project planning, and EPC functionality.</li>
+                <li>This system is now functional and managed by 5 people.</li>
+              </ul>
+              <figure class="atlas-brand">
+                <img src="assets/projects/atlas/subcritical-logo.png" alt="Subcritical Systems" width="1200" height="630" loading="lazy" decoding="async">
+              </figure>
+            </div>
+          </details>
           <details class="work-bubble" name="work" id="taurus">
             <summary>
               <span class="bubble-surface" aria-hidden="true"></span>
@@ -79,35 +122,7 @@
               </div>
             </div>
           </details>
-          <details class="work-bubble" name="work" id="atlas">
-            <summary>
-              <span class="bubble-surface" aria-hidden="true"></span>
-              <span class="bubble-title">ATLAS</span>
-              <span class="bubble-action" aria-hidden="true"><span class="bubble-close-label">Close</span><span class="bubble-symbol">+</span></span>
-            </summary>
-            <div class="bubble-content project-content atlas-content">
-              <p class="project-role">Designer and Developer</p>
-              <ul class="project-description">
-                <li>ATLAS is the proprietary intelligence layer for Subcritical Systems.</li>
-                <li>I designed and developed the current version, which features 3D capabilities, project planning, as well as regulatory and EPC functionality.</li>
-                <li>This system is now maintained by 5 engineers and is functional.</li>
-              </ul>
-              <div class="project-gallery atlas-gallery" data-gallery="ATLAS project images" aria-label="ATLAS project images">
-                <figure class="project-screen project-screen-featured">
-                  <a class="photo-link" href="assets/projects/atlas/radiation-analysis.png" data-title="ATLAS — Radiation analysis" aria-label="Enlarge ATLAS radiation analysis">
-                    <img src="assets/projects/atlas/radiation-analysis.png" width="1062" height="700" alt="Radiation dose-rate cross-section with a logarithmic color scale and facility outlines." loading="lazy" decoding="async">
-                  </a>
-                  <figcaption>Radiation analysis <span aria-hidden="true">↗</span></figcaption>
-                </figure>
-                <figure class="project-screen">
-                  <a class="photo-link" href="assets/projects/atlas/facility-model.png" data-title="ATLAS — 3D facility model" aria-label="Enlarge ATLAS 3D facility model">
-                    <img src="assets/projects/atlas/facility-model.png" width="2168" height="1296" alt="A detailed 3D facility model with structural beams, service lines, equipment, and an access stairway." loading="lazy" decoding="async">
-                  </a>
-                  <figcaption>3D facility model <span aria-hidden="true">↗</span></figcaption>
-                </figure>
-              </div>
-            </div>
-          </details>
+
           <details class="work-bubble" name="work" id="ntp">
             <summary>
               <span class="bubble-surface" aria-hidden="true"></span>
@@ -187,7 +202,7 @@
             <div class="bubble-content project-content agentic-content">
               <p class="project-role">Research in Progress</p>
               <ul class="project-description">
-                <li>I am currently working with Ian Burges and Matt Burges at Ascendance Foundry on research into multi-agent systems.</li>
+                <li>I am currently working with Dr. Ian Burgess at Ascendance Foundry and Prof. Matt Burgess at the University of Wyoming on research into multi-agent systems.</li>
                 <li>The goal of the study is to quantify entropy in multi-agent systems in order to develop a playbook for minimizing error.</li>
               </ul>
               <div class="project-gallery" data-gallery="Agentic System Research" aria-label="Agentic System Research">
@@ -228,6 +243,66 @@
             </div>
           </details>
       </div>
+    </section>
+    <section class="resume-section" id="cv" aria-labelledby="resume-title">
+      <div class="resume-heading">
+        <h2 id="resume-title">CV</h2>
+        <a class="download-link" href="assets/Resume_Loic_Magnan.pdf" download>Download PDF <span aria-hidden="true">↓</span></a>
+      </div>
+    <section class="cv-section" aria-labelledby="resume-education">
+      <h2 id="resume-education">Education</h2>
+      <div class="cv-entry">
+        <div class="cv-entry-head"><h3>University of Illinois Urbana-Champaign</h3><span class="cv-date">Expected May 2027</span></div>
+        <p class="cv-role">B.S. Nuclear Engineering</p>
+        <p class="cv-description">Power, Safety, and Environment (Fission).<br>GPA 3.91 · Dean’s List · American Nuclear Society</p>
+      </div>
+    </section>
+    <section class="cv-section" aria-labelledby="resume-experience">
+      <h2 id="resume-experience">Experience</h2>
+      <div>
+        <article class="cv-entry">
+          <div class="cv-entry-head"><h3>Subcritical Systems</h3><span class="cv-date">May 2026 – Present</span></div>
+          <p class="cv-role">AI Engineering Intern</p>
+          <p class="cv-description">Built software connecting design reports, analysis tools, and facility geometry for an accelerator-driven subcritical power plant. Conducted accelerator shielding studies in Geant4. Handed off the engineering workflow to a team of five engineers.</p>
+        </article>
+        <article class="cv-entry">
+          <div class="cv-entry-head"><h3>Analysis of Reactor Transients and Stability</h3><span class="cv-date">September 2024 – Present</span></div>
+          <p class="cv-role">Research Assistant · Prof. Kozlowski’s group</p>
+          <p class="cv-description">Burnup modeling, subcritical reactor economics, and the High Temperature Incandescent Reactor. Comparing data-center and flexible-load operation. Also training GPT-2 small models to study the effect of neural-network architecture on performance.</p>
+        </article>
+        <article class="cv-entry">
+          <div class="cv-entry-head"><h3>Center for Plasma-Material Interactions</h3><span class="cv-date">October 2023 – September 2024</span></div>
+          <p class="cv-role">Lab Assistant</p>
+          <p class="cv-description">Studied stannane deposition on novel materials in high vacuum for ASML lithography applications.</p>
+        </article>
+      </div>
+    </section>
+    <section class="cv-section" aria-labelledby="resume-publications">
+      <h2 id="resume-publications">Publications &amp;<br>presentations</h2>
+      <div>
+        <article class="cv-entry">
+          <div class="cv-entry-head"><h3>Nuclear Data Needs and Neutronics Analysis of XDS</h3><span class="cv-date">April 2026</span></div>
+          <p class="cv-description">Wen, R., Fang, M., Magnan, L., Kozlowski, T., Di Fulvio, A.<br>Poster at the ARPA-E Energy Innovation Summit. Accelerator modeling in FLUKA; neutronics and burnup calculations in Serpent.</p>
+        </article>
+        <article class="cv-entry">
+          <div class="cv-entry-head"><h3>Regulatory Feasibility of Contemporary Atmospheric NTP Testing</h3><span class="cv-date">May 2026</span></div>
+          <p class="cv-description">Erkiralp, D.C., Magnan, L., Kozlowski, T.<br>Accepted to ANS NETS 2026; presented at STARFIRE 2026. Serpent modeling and CAP-88 analysis of fission-product release and cladding erosion.</p>
+        </article>
+        <article class="cv-entry">
+          <div class="cv-entry-head"><h3>Bitcoin Mining as a Potential Enabler for Low Cost Fully Nuclear Energy Grids</h3><span class="cv-date">April 2026</span></div>
+          <p class="cv-description">Magnan, L.<br>ANS Student Conference. Analysis of interruptible mining demand on the French grid and flexible loads for nuclear microgrids.</p>
+        </article>
+      </div>
+    </section>
+    <section class="cv-section" aria-labelledby="resume-other">
+      <h2 id="resume-other">Other</h2>
+      <dl class="cv-compact">
+        <dt>Nuclear codes</dt><dd>Serpent, OpenMC, FLUKA, Geant4, EPA CAP-88</dd>
+        <dt>Software</dt><dd>Multi-agent systems, MCP, graph retrieval, Blender, Jev</dd>
+        <dt>Languages</dt><dd>English, French, Spanish</dd>
+        <dt>Interests</dt><dd>Golf, squash, tennis, local AI, cooking</dd>
+      </dl>
+    </section>
     </section>
     <section class="photography-section" id="photography" aria-labelledby="photography-title">
       <h2 id="photography-title">Photography</h2>
@@ -279,7 +354,6 @@
       </figure>
     </div>
     </section>
-    <footer class="portfolio-footer"><a href="cv.html">CV <span aria-hidden="true">↗</span></a></footer>
   </main>
   <dialog id="photo-viewer" class="photo-viewer" aria-label="Photo viewer">
     <div class="viewer-layout">
@@ -295,9 +369,10 @@
     </div>
   </dialog>
   <script src="portfolio.js?v=3.1" defer></script>
-  <script src="bubble-engine.js?v=3.0" defer></script>
-  <script src="bubble-motion.js?v=3.1" defer></script>
-  <script src="work-bubbles.js?v=3.0" defer></script>
+  <script src="bubble-physics.js?v=3.2" defer></script>
+  <script src="bubble-engine.js?v=3.2" defer></script>
+  <script src="bubble-motion.js?v=3.2" defer></script>
+  <script src="work-bubbles.js?v=3.2" defer></script>
   <script src="gallery.js?v=3.1" defer></script>
 </body>
 </html>

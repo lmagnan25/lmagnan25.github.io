@@ -110,3 +110,12 @@ and horizontal swipes. Without JavaScript, photos open as normal image links.
 The site can be served from the repository root by GitHub Pages. Keep `CNAME`
 and `.nojekyll`. The public repository contains the current site and its source;
 original photos, simulation workspaces and rollback copies stay local.
+
+## Version 3.2
+
+The portfolio uses the Soap film membrane model from the Bubble Model playground,
+with smoother outlines, 25% larger bubbles, dragging, and soft contact. Motion
+runs at twice the reviewed test speed. ATLAS starts uppermost. The homepage places
+the full CV before Photography and uses soap-film lettering for the name.
+A stronger initial impulse brings the bubbles into contact sooner.
+See [changes and validation](docs/soap-film-test.md).

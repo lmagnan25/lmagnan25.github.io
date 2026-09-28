@@ -1,44 +1,13 @@
-// Procedural soap-film contours in CSS-pixel space. No scaled texture: the rim
-// is recalculated as the boundary changes dimensions; HTML remains independent.
+// The approved soap-film optics on a smooth, simulated contour. Content is HTML.
 (() => {
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const states = new Map();
-  const padding = 60;
-  const MODES = 16;
-  let frame = 0, lastTime = 0, elapsed = 0;
-  const vertex = `
-    attribute vec2 position;
-    varying vec2 uv;
-    void main() { uv = position * .5 + .5; gl_Position = vec4(position, 0., 1.); }
-  `;
-  const fragment = `
-    precision highp float;
-    varying vec2 uv;
-    uniform vec2 resolution;
-    uniform vec4 shape;
-    uniform vec2 harm[8];
-    uniform float exponent;
-    uniform float phase;
-    uniform float seed;
-    uniform float time;
-    uniform vec4 character;
-    uniform float waveInset;
-    uniform vec4 barriers[8];
-    uniform float barrierRelease;
-
-    float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-    float noise(vec2 p) {
-      vec2 i = floor(p), f = fract(p), u = f * f * (3. - 2. * f);
-      return mix(mix(hash(i), hash(i + vec2(1., 0.)), u.x),
-                 mix(hash(i + vec2(0., 1.)), hash(i + vec2(1., 1.)), u.x), u.y);
-    }
-    float fbm(vec2 p) {
-      float v = 0., a = .5;
-      for (int i = 0; i < 4; i++) { v += a * noise(p); p = mat2(1.6, 1.2, -1.2, 1.6) * p; a *= .5; }
-      return v;
-    }
-    // Soap-film interference: reflectance of a water film of thickness h (nm),
-    // integrated over eleven wavelengths with CIE-derived sRGB weights.
+'use strict';
+const {N,smoothOutline}=BubblePhysics;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const states=[],padding=56;
+let raf=0,last=0,time=0;
+const vshader=`attribute vec2 position;attribute vec2 local;attribute vec2 normal;attribute float depth;uniform vec2 resolution;varying vec2 vLocal;varying vec2 vNormal;varying float vDepth;void main(){vLocal=local;vNormal=normal;vDepth=depth;gl_Position=vec4(position/resolution*vec2(2.,-2.)+vec2(-1.,1.),0.,1.);}`;
+const fshader=`precision highp float;varying vec2 vLocal;varying vec2 vNormal;varying float vDepth;uniform float radius;uniform float time;uniform float seed;uniform float mode;uniform float expanded;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}float noise(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),u.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.)),u.x),u.y);}
     vec3 film(float h, float cosT) {
       float k = 4. * 3.14159 * 1.33 * h * cosT;
       vec3 c = vec3(0.);
@@ -55,353 +24,109 @@
       c += vec3(.0047,.0008,-.0002) * pow(sin(k / 695.), 2.);
       return max(c * 2., 0.);
     }
-    // The only light is a faint studio backdrop, strongest at grazing angles,
-    // which draws the thin iridescent outline.
-    float environment(vec3 r) {
-      float backdrop = .04 + .3 * pow(clamp(-r.z, 0., 1.), 3.) + .07 * clamp(-r.y, 0., 1.);
-      return backdrop;
-    }
-    // Slow surface oscillations bend against shared contact boundaries.
-    // The expanded reading panel uses the same iridescent material.
-    float membrane(vec2 p) {
-      vec2 halfSize = max(shape.zw * .5 - 7., vec2(1.));
-      vec2 q = p / halfSize;
-      vec2 ab = max(abs(q), vec2(.0001));
-      float field = pow(ab.x, exponent) + pow(ab.y, exponent) - 1.;
-      vec2 gradient = exponent * pow(ab, vec2(exponent - 1.)) / halfSize;
-      float t = pow(field + 1., 1. / exponent);
-      float radial = t < .02 ? 1e4 : length(p) * (1. / t - 1.);
-      float approx = -field / max(length(gradient), .0001);
-      float inside = field < 0. ? min(radial, approx) : approx;
-      float a = atan(q.y, q.x) - phase;
-      float wave = 0.;
-      for (int i = 0; i < 8; i++) {
-        float n = float(i + 2);
-        wave += harm[i].x * cos(n * a) + harm[i].y * sin(n * a);
-      }
-      inside += wave - waveInset;
-      // These planes partition the visible space. They use the same displayed
-      // centers as the HTML, so neighboring membranes cannot cross each other.
-      for (int i = 0; i < 8; i++) {
-        if (barriers[i].w > .5) {
-          float plane = barriers[i].z + barrierRelease - dot(p, barriers[i].xy);
-          float blend = max(3. - abs(inside - plane), 0.) / 3.;
-          inside = min(inside, plane) - blend * blend * .75;
-        }
-      }
-      return inside;
-    }
-    void main() {
-      vec2 p = vec2(uv.x, 1. - uv.y) * resolution - shape.xy;
-      vec2 halfSize = max(shape.zw * .5 - 7., vec2(1.));
-      float inside = membrane(p);
-      if (inside < -2.) { gl_FragColor = vec4(0.); return; }
 
-      // A sphere when closed; a softly bevelled pillow when open. The bevel is in
-      // pixels, so the rim keeps its optical width however large the panel grows.
-      float openness = clamp((exponent - 2.) / .9, 0., 1.);
-      float minHalf = min(halfSize.x, halfSize.y);
-      float bevel = mix(minHalf, min(minHalf, 42.), openness);
-      if (inside > .6 * bevel) { gl_FragColor = vec4(0.); return; }
-      float s = clamp(inside / bevel, 0., 1.);
-      float nz = sqrt(max(1. - (1. - s) * (1. - s), 0.));
-      vec2 e = vec2(.75, 0.);
-      vec2 gradient = vec2(membrane(p - e.xy) - membrane(p + e.xy), membrane(p - e.yx) - membrane(p + e.yx));
-      vec2 outward = normalize(gradient + vec2(1e-6));
-      vec3 n = vec3(outward * sqrt(max(1. - nz * nz, 0.)), nz);
-
-      // Front reflection, and the inverted image from the inside of the far wall.
-      vec3 front = vec3(2. * nz * n.xy, 2. * nz * nz - 1.);
-      vec3 back = vec3(-front.xy, front.z);
-
-      // Film thickness in nm: each bubble has its own age, drainage and swirl.
-      float c = cos(phase), sn = sin(phase);
-      vec2 fp = mat2(c, -sn, sn, c) * p / character.w;
-      vec2 warp = vec2(fbm(fp + vec2(seed, time * .05)), fbm(fp + vec2(5.2 - time * .04, seed)));
-      float swirl = fbm(fp * .8 + warp * 1.8 + seed);
-      float drain = clamp(.5 + p.y / (2. * halfSize.y), 0., 1.);
-      float h = max(character.x + 320. * openness + character.y * (drain - .5) + character.z * (swirl - .5), 60.);
-      float cosT = sqrt(1. - (1. - nz * nz) / 1.769);
-      vec3 tint = film(h, cosT);
-      tint = mix(tint, vec3(1.), pow(1. - nz, 4.) * .4);
-
-      float fresnel = pow(1. - nz, 5.);
-      vec3 light = tint * fresnel * (environment(front) + environment(back) * .5 * (1. - openness))
-        + tint * pow(1. - nz, 4.) * .5 * openness;
-      // The rim's glare fades inward across the outer fifth of the bubble.
-      float glowWidth = mix(.2 * minHalf, 24., openness);
-      float glow = pow(clamp(1. - inside / glowWidth, 0., 1.), 1.6);
-      light += tint * glow * .2;
-      // A soft glossy glint near the upper-left rim, mirrored faintly lower right.
-      vec3 glintDir = normalize(vec3(-.6, -.66, -.3));
-      float glint = exp(-pow(length(front - glintDir) / .34, 2.))
-        + .35 * exp(-pow(length(back - glintDir) / .42, 2.)) * (1. - openness);
-      light += mix(tint, vec3(1.), .55) * glint * .5;
-      light = 1. - exp(-light * 1.3);
-      float edge = smoothstep(-.9, .9, inside);
-      light *= edge;
-      gl_FragColor = vec4(light, clamp(max(light.r, max(light.g, light.b)), 0., 1.));
-    }
-  `;
-
-  function compile(gl, type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      gl.deleteShader(shader);
-      throw new Error('Bubble shader compilation failed');
-    }
-    return shader;
-  }
-
-  function initialize(state) {
-    const { gl } = state;
-    const program = gl.createProgram();
-    const shaders = [compile(gl, gl.VERTEX_SHADER, vertex), compile(gl, gl.FRAGMENT_SHADER, fragment)];
-    shaders.forEach(shader => gl.attachShader(program, shader));
-    gl.linkProgram(program);
-    shaders.forEach(shader => gl.deleteShader(shader));
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('Bubble program linking failed');
-    gl.useProgram(program);
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
-    const position = gl.getAttribLocation(program, 'position');
-    gl.enableVertexAttribArray(position);
-    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-    state.uniforms = Object.fromEntries(['resolution','shape','harm','waveInset','barriers','barrierRelease','exponent','phase','seed','time','character']
-      .map(name => [name, gl.getUniformLocation(program, name)]));
-    state.ready = true;
-    fit(state);
-    state.surface.classList.add('has-bubble-engine');
-    state.bubble.dispatchEvent(new Event('bubblerendererchange'));
-    schedule();
-  }
-
-  function sizeCanvas(state, left, top, width, height) {
-    const { canvas, gl } = state;
-    const density = Math.min(devicePixelRatio || 1, 2, 2048 / Math.max(width, height));
-    Object.assign(canvas.style, { left:`${left}px`, top:`${top}px`, width:`${width}px`, height:`${height}px` });
-    canvas.width = Math.max(1, Math.round(width * density));
-    canvas.height = Math.max(1, Math.round(height * density));
-    state.resolution = [width, height];
-    gl.viewport(0, 0, canvas.width, canvas.height);
-  }
-
-  function shapeExponent(open, width) {
-    return open ? (width < 500 ? 3.5 : 2.9) : 2;
-  }
-
-  function fit(state) {
-    if (!state.ready || state.morph) return;
-    const { width, height } = state.bubble.getBoundingClientRect();
-    sizeCanvas(state, -padding, -padding, width + padding * 2, height + padding * 2);
-    state.shape = [width / 2 + padding, height / 2 + padding, width, height];
-    state.exponent = shapeExponent(state.bubble.open, width);
-    state.barriers.set(state.bubble.open ? emptyBarriers : state.targetBarriers);
-    draw(state);
-  }
-
-  function draw(state) {
-    if (!state.ready) return;
-    const { gl, uniforms } = state;
-    gl.uniform2fv(uniforms.resolution, state.resolution);
-    gl.uniform4fv(uniforms.shape, state.shape);
-    const still = reduced.matches;
-    const openness = Math.max(0, Math.min(1, (state.exponent - 2) / .9));
-    let amplitude = 0;
-    for (let k = 0; k < MODES; k += 2) amplitude += Math.hypot(state.modes[k], state.modes[k + 1]);
-    const limit = Math.min(7, Math.min(state.shape[2], state.shape[3]) * .035);
-    const scale = amplitude > .0001 ? limit * Math.tanh(amplitude / limit) / amplitude : 1;
-    for (let k = 0; k < MODES; k++) state.renderModes[k] = state.modes[k] * scale;
-    gl.uniform2fv(uniforms.harm, still ? zeros : state.renderModes);
-    gl.uniform1f(uniforms.waveInset, still ? 0 : amplitude * scale * .08 * (1 - openness));
-    gl.uniform4fv(uniforms.barriers, still ? emptyBarriers : state.barriers);
-    gl.uniform1f(uniforms.barrierRelease, state.morph ? state.morph.release : 0);
-    gl.uniform1f(uniforms.exponent, state.exponent);
-    gl.uniform1f(uniforms.phase, state.seed + (reduced.matches ? 0 : elapsed * state.spin));
-    gl.uniform1f(uniforms.seed, state.seed);
-    gl.uniform4fv(uniforms.character, state.character);
-    gl.uniform1f(uniforms.time, reduced.matches ? 0 : elapsed + state.seed * 10);
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
-  }
-
-  const zeros = new Float32Array(MODES);
-  const emptyBarriers = new Float32Array(32);
-  // A damped oscillator replaces the randomly forced liquid simulation.
-  // Slow low modes keep a little movement even between contacts.
-  // Collisions add velocity to the low-frequency modes; they then ring down.
-  function simulate(state, dt) {
-    const openness = Math.max(0, Math.min(1, (state.exponent - 2) / .9));
-    const quiet = 1 - .8 * openness;
-    for (let k = 0; k < MODES; k++) {
-      const order = (k >> 1) + 2;
-      const amplitude = k < 2 ? 2.4 : k < 4 ? .7 : 0;
-      const target = amplitude * quiet * Math.sin(elapsed * (.28 + k * .021) + state.seed + k * 1.7);
-      const omega = 3.8 * Math.sqrt(order / 2);
-      const damping = .25 + openness * .4;
-      state.velocity[k] += ((target - state.modes[k]) * omega * omega - 2 * damping * omega * state.velocity[k]) * dt;
-      state.modes[k] += state.velocity[k] * dt;
-    }
-  }
-
-  function morph(state, detail) {
-    if (!state.ready) return;
-    // A second click starts from the currently drawn boundary, not an endpoint.
-    const interrupted = state.morph ? {
-      left:detail.from.left + parseFloat(state.canvas.style.left) + state.shape[0] - state.shape[2] / 2,
-      top:detail.from.top + parseFloat(state.canvas.style.top) + state.shape[1] - state.shape[3] / 2,
-      width:state.shape[2], height:state.shape[3], open:detail.from.open,
-    } : null;
-    const previousExponent = state.exponent;
-    const previousRelease = state.morph ? state.morph.release : 0;
-    state.morph = null;
-    if (reduced.matches || !detail.duration) { fit(state); return; }
-    const from = interrupted || detail.from, to = detail.to;
-    const x = from.left - to.left, y = from.top - to.top;
-    const left = Math.min(x, 0) - padding, top = Math.min(y, 0) - padding;
-    sizeCanvas(state, left, top,
-      Math.max(x + from.width, to.width) - left + padding,
-      Math.max(y + from.height, to.height) - top + padding);
-    state.morph = {
-      start:performance.now(), duration:detail.duration,
-      from:[x + from.width / 2 - left, y + from.height / 2 - top, from.width, from.height],
-      to:[to.width / 2 - left, to.height / 2 - top, to.width, to.height],
-      fromExponent:interrupted ? previousExponent : shapeExponent(from.open, from.width),
-      toExponent:shapeExponent(to.open, to.width),
-      release:previousRelease, fromRelease:previousRelease,
-      maxRelease:Math.max(from.width, from.height, to.width, to.height) * 4,
-    };
-    state.shape = state.morph.from;
-    state.exponent = state.morph.fromExponent;
-    if (from.open !== to.open) {
-      state.velocity[0] += to.open ? 4 : -4;
-    }
-    draw(state);
-    schedule();
-  }
-
-  function schedule() {
-    if (!frame && !document.hidden && !reduced.matches && [...states.values()].some(s => s.ready && (s.morph || s.visible))) {
-      lastTime = performance.now();
-      frame = requestAnimationFrame(tick);
-    }
-  }
-
-  function tick(now) {
-    frame = 0;
-    if (document.hidden || reduced.matches) return;
-    const dt = Math.max(0, Math.min((now - lastTime) / 1000, .032));
-    lastTime = now;
-    elapsed += dt;
-    let active = false;
-    for (const state of states.values()) {
-      if (!state.ready || (!state.morph && !state.visible)) continue;
-      active = true;
-      if (state.morph) {
-        const m = state.morph, t = Math.min(1, (now - m.start) / m.duration);
-        m.progress = t;
-        const ease = 1 - Math.pow(1 - t, 4);
-        if (!state.bubble.open && t >= .5) {
-          state.barriers.set(state.targetBarriers);
-          m.release = m.maxRelease * Math.pow(2 * (1 - t), 4);
-        } else {
-          const releaseEase = 1 - Math.pow(1 - Math.min(1, t * 2), 4);
-          m.release = m.fromRelease + (m.maxRelease - m.fromRelease) * releaseEase;
-        }
-        // Width leads height a little, like a membrane finding its new volume.
-        state.shape = m.from.map((value, i) => value + (m.to[i] - value) * (i === 3 ? 1 - Math.pow(1 - t, 3.2) : ease));
-        state.exponent = m.fromExponent + (m.toExponent - m.fromExponent) * ease;
-        if (t === 1) { state.morph = null; fit(state); }
-      }
-      state.phase = state.seed + elapsed * state.spin;
-      const steps = Math.max(1, Math.ceil(dt / .012));
-      for (let i = 0; i < steps; i++) simulate(state, dt / steps);
-      if (!state.positioned || state.morph || state.bubble.open) draw(state);
-    }
-    if (active) frame = requestAnimationFrame(tick);
-  }
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      const state = states.get(entry.target);
-      state.visible = entry.isIntersecting;
-      if (state.visible) draw(state);
-    });
-    schedule();
-  }, { rootMargin:'60px' });
-
-  document.querySelectorAll('.work-bubble').forEach((bubble, index) => {
-    const surface = bubble.querySelector('.bubble-surface');
-    const canvas = document.createElement('canvas');
-    canvas.className = 'bubble-canvas';
-    canvas.setAttribute('aria-hidden', 'true');
-    surface.append(canvas);
-    const gl = canvas.getContext('webgl', { alpha:true, premultipliedAlpha:true, antialias:false, depth:false, stencil:false, powerPreference:'low-power' });
-    if (!gl) { canvas.remove(); return; }
-    const state = {
-      bubble, surface, canvas, gl, ready:false, visible:false, morph:null,
-      seed:[.3,2.6,4.8,1.5,5.7,3.4][index % 6],
-      speed:[.87,.68,.76,.63,.81,.71][index % 6],
-      spin:[.075,-.061,.055,-.072,.065,-.05][index % 6],
-      // Film age: base thickness, drainage, swirl depth (nm) and swirl scale (px).
-      character:[[600,500,440,64],[620,520,460,60],[580,540,420,72],[640,480,480,56],[560,520,380,70],[610,500,450,66]][index % 6],
-      modes:new Float32Array(MODES), renderModes:new Float32Array(MODES), velocity:new Float32Array(MODES), phase:0,
-      barriers:new Float32Array(32), targetBarriers:new Float32Array(32), positioned:false,
-
-    };
-    states.set(bubble, state);
-    try { initialize(state); } catch { state.ready = false; }
-    observer.observe(bubble);
-    new ResizeObserver(() => fit(state)).observe(bubble);
-    bubble.addEventListener('bubblemorph', event => morph(state, event.detail));
-    bubble.addEventListener('bubblesettle', () => { state.morph = null; fit(state); });
-    function storeTargets(event) {
-      state.targetBarriers.fill(0);
-      event.detail.slice(0,8).forEach((plane, index) => state.targetBarriers.set(plane, index * 4));
-    }
-    bubble.addEventListener('bubblebarriertargets', storeTargets);
-    bubble.addEventListener('bubblebarriers', event => {
-      storeTargets(event);
-      if (state.morph || bubble.open) return;
-      state.barriers.set(state.targetBarriers);
-      state.positioned = true;
-      // Draw after all positions are applied: no one-frame lag between the
-      // collision plane and the visible membrane.
-      if (state.visible) draw(state);
-    });
-    bubble.addEventListener('bubbleimpact', event => {
-      if (reduced.matches || bubble.open || state.morph) return;
-      const { x, y, speed } = event.detail;
-      const angle = Math.atan2(y, x) - state.phase;
-      const kick = Math.min(25, speed * 1.3);
-      state.velocity[0] -= Math.cos(2 * angle) * kick;
-      state.velocity[1] -= Math.sin(2 * angle) * kick;
-      state.velocity[2] -= Math.cos(3 * angle) * kick * .12;
-      state.velocity[3] -= Math.sin(3 * angle) * kick * .12;
-      schedule();
-    });
-    canvas.addEventListener('webglcontextlost', event => {
-      event.preventDefault(); state.ready = false; state.morph = null;
-      surface.classList.remove('has-bubble-engine');
-      bubble.dispatchEvent(new Event('bubblerendererchange'));
-    });
-    canvas.addEventListener('webglcontextrestored', () => {
-      try { initialize(state); } catch { state.ready = false; }
-    });
-  });
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { cancelAnimationFrame(frame); frame = 0; }
-    else schedule();
-  });
-  reduced.addEventListener('change', () => {
-    cancelAnimationFrame(frame); frame = 0;
-    states.forEach(state => {
-      state.morph = null;
-      state.modes.fill(0); state.velocity.fill(0);
-      fit(state);
-    });
-    schedule();
-  });
+void main(){float d=max(vDepth,0.);float s=clamp(d/radius,0.,1.);float nz=sqrt(max(1.-(1.-s)*(1.-s),0.));vec2 outward=normalize(vNormal);float angle=atan(outward.y,outward.x);float h=600.+250.*vLocal.y+170.*sin(angle*2.+time*.15+seed)+80.*noise(vLocal*3.+vec2(time*.08,seed));h=mix(h,620.+200.*sin(angle+time*.1+seed)+80.*noise(vLocal*.6+seed),expanded);vec3 tint=film(h,sqrt(1.-(1.-nz*nz)/1.769));tint=mix(tint,vec3(dot(tint,vec3(.2126,.7152,.0722))),.23);tint=mix(tint,vec3(1.),pow(1.-nz,4.)*.4);float fresnel=pow(1.-nz,5.);float glow=pow(clamp(1.-d/(radius*.2),0.,1.),1.6);vec3 front=vec3(2.*nz*outward*sqrt(max(1.-nz*nz,0.)),2.*nz*nz-1.);vec3 light=tint*(fresnel*.5+glow*.2);float glint=exp(-pow(length(front-normalize(vec3(-.6,-.66,-.3)))/.34,2.));light+=mix(tint,vec3(1.),.55)*glint*.52;
+if(mode>.5&&mode<1.5){vec3 pearl=mix(vec3(.62,.75,.86),vec3(.84,.74,.62),.5+.5*sin(angle+seed));light=mix(light,pearl*(fresnel*.32+glow*.42),.7);light+=pearl*pow(clamp(1.-d/(radius*.36),0.,1.),2.)*.036;}
+if(mode>1.5){vec3 aurora=mix(vec3(.34,.87,.85),vec3(.85,.53,.89),.5+.5*sin(angle*2.-time*.2+seed));light=mix(light,aurora*(fresnel*.4+glow*.45),.73);light+=aurora*exp(-pow((d-5.)/4.,2.))*.045;}
+light*=mix(1.,.63,expanded);light=1.-exp(-light*1.3);float edge=smoothstep(-.6,.8,vDepth);light*=edge;gl_FragColor=vec4(light,clamp(max(light.r,max(light.g,light.b)),0.,1.));}`;
+function panelPoints(w,h,open){
+  const rx=Math.max(1,w/2-7),ry=Math.max(1,h/2-7),n=open?(w<500?3.5:2.9):2;
+  return Array.from({length:N},(_,i)=>{const a=i/N*Math.PI*2,c=Math.cos(a),s=Math.sin(a);return {x:w/2+rx*Math.sign(c)*Math.pow(Math.abs(c),2/n),y:h/2+ry*Math.sign(s)*Math.pow(Math.abs(s),2/n)};});
+}
+function initialize(s){
+ const gl=s.canvas.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:true,depth:false,powerPreference:'low-power'});
+ if(!gl)return;
+ s.gl=gl;
+ function compile(type,source){const shader=gl.createShader(type);gl.shaderSource(shader,source);gl.compileShader(shader);if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(shader));return shader;}
+ const program=gl.createProgram(),shaders=[compile(gl.VERTEX_SHADER,vshader),compile(gl.FRAGMENT_SHADER,fshader)];
+ shaders.forEach(shader=>gl.attachShader(program,shader));gl.linkProgram(program);shaders.forEach(shader=>gl.deleteShader(shader));
+ if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('Could not link soap-film material');
+ s.program=program;s.buffer=gl.createBuffer();gl.useProgram(program);gl.bindBuffer(gl.ARRAY_BUFFER,s.buffer);
+ for(const [name,count,offset] of [['position',2,0],['local',2,8],['normal',2,16],['depth',1,24]]){const a=gl.getAttribLocation(program,name);gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,count,gl.FLOAT,false,28,offset);}
+ s.locations=Object.fromEntries(['resolution','radius','time','seed','mode','expanded'].map(name=>[name,gl.getUniformLocation(program,name)]));
+ gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);s.ready=true;
+}
+function sizeCanvas(s,left,top,w,h){
+ const density=Math.min(devicePixelRatio||1,1.7,2560/Math.max(w,h));
+ for(const c of [s.canvas,s.fallback])Object.assign(c.style,{left:`${left}px`,top:`${top}px`,width:`${w}px`,height:`${h}px`});
+ const pw=Math.max(1,Math.round(w*density)),ph=Math.max(1,Math.round(h*density));
+ for(const c of [s.canvas,s.fallback])if(c.width!==pw||c.height!==ph){c.width=pw;c.height=ph;}
+ s.ctx.setTransform(density,0,0,density,0,0);
+ s.box={left,top,w,h};
+ if(s.ready)s.gl.viewport(0,0,pw,ph);
+}
+function fit(s){
+ if(s.morph)return;
+ const w=s.bubble.offsetWidth,h=s.bubble.offsetHeight;
+ if(!w||!h)return;
+ sizeCanvas(s,-padding,-padding,w+padding*2,h+padding*2);
+ s.points=!s.bubble.open&&s.target?s.target.map(p=>({...p})):panelPoints(w,h,s.bubble.open);
+ s.radius=Math.min(w,h)/2-7;s.openMix=s.bubble.open?1:0;draw(s);
+}
+function draw(s){
+ if(!s.points)return;
+ const gl=s.gl,loc=s.locations,points=smoothOutline(s.points),count=points.length;
+ let cx=0,cy=0;for(const p of points){cx+=p.x/count;cy+=p.y/count;}
+ const normals=points.map((p,i)=>{const a=points[(i+count-1)%count],b=points[(i+1)%count],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy)||1;return {x:dy/l,y:-dx/l};});
+ if(!s.ready){
+  const ctx=s.ctx;ctx.clearRect(0,0,s.box.w,s.box.h);
+  const grad=ctx.createLinearGradient(cx-s.radius-s.box.left,cy-s.radius-s.box.top,cx+s.radius-s.box.left,cy+s.radius-s.box.top);
+  grad.addColorStop(0,'#bfd4e2');grad.addColorStop(.3,'#b6a6cb');grad.addColorStop(.62,'#89b6b9');grad.addColorStop(1,'#dfb7ca');
+  ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x-s.box.left,p.y-s.box.top):ctx.moveTo(p.x-s.box.left,p.y-s.box.top));ctx.closePath();
+  ctx.strokeStyle=grad;ctx.lineWidth=1.6;ctx.shadowColor='#a3c6d540';ctx.shadowBlur=9;ctx.stroke();ctx.shadowBlur=0;return;
+ }
+ const radius=s.radius,rings=[-.7,.4,1.8,4,8,14,radius*.22,radius*.34,radius*.48].sort((a,b)=>a-b);
+ const needed=(rings.length-1)*count*6*7;
+ if(!s.data||s.data.length!==needed)s.data=new Float32Array(needed);
+ let cursor=0;
+ function vertex(i,d){const p=points[i],n=normals[i],x=p.x-n.x*d,y=p.y-n.y*d;const data=s.data;data[cursor++]=x-s.box.left;data[cursor++]=y-s.box.top;data[cursor++]=(x-cx)/radius;data[cursor++]=(y-cy)/radius;data[cursor++]=n.x;data[cursor++]=n.y;data[cursor++]=d;}
+ for(let k=0;k<rings.length-1;k++)for(let i=0;i<count;i++){const j=(i+1)%count;vertex(i,rings[k]);vertex(j,rings[k]);vertex(i,rings[k+1]);vertex(j,rings[k]);vertex(j,rings[k+1]);vertex(i,rings[k+1]);}
+ gl.useProgram(s.program);gl.bindBuffer(gl.ARRAY_BUFFER,s.buffer);gl.bufferData(gl.ARRAY_BUFFER,s.data,gl.DYNAMIC_DRAW);
+ gl.uniform2f(loc.resolution,s.box.w,s.box.h);gl.uniform1f(loc.radius,Math.min(radius,156));gl.uniform1f(loc.time,reduced.matches?0:time);gl.uniform1f(loc.seed,s.seed);gl.uniform1f(loc.mode,0);gl.uniform1f(loc.expanded,s.openMix||0);
+ gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLES,0,cursor/7);
+}
+function morph(s,detail){
+ const fromPoints=(s.points||panelPoints(detail.from.width,detail.from.height,detail.from.open)).map(p=>({x:p.x+detail.from.left-detail.to.left,y:p.y+detail.from.top-detail.to.top}));
+ const toPoints=!detail.to.open&&s.target?s.target.map(p=>({...p})):panelPoints(detail.to.width,detail.to.height,detail.to.open);
+ s.morph=null;
+ if(reduced.matches||!detail.duration){fit(s);return;}
+ const xs=fromPoints.map(p=>p.x),ys=fromPoints.map(p=>p.y);
+ const left=Math.min(0,...xs)-padding,top=Math.min(0,...ys)-padding;
+ sizeCanvas(s,left,top,Math.max(detail.to.width,...xs)-left+padding,Math.max(detail.to.height,...ys)-top+padding);
+ s.morph={from:fromPoints,to:toPoints,start:performance.now(),duration:detail.duration,fromMix:s.openMix||0,toMix:detail.to.open?1:0,fromRadius:s.radius,toRadius:Math.min(detail.to.width,detail.to.height)/2-7};
+ s.points=fromPoints;draw(s);schedule();
+}
+function schedule(){if(!raf&&!document.hidden&&!reduced.matches&&states.some(s=>s.visible||s.morph)){last=performance.now();raf=requestAnimationFrame(tick);}}
+function tick(now){
+ raf=0;time+=Math.min(.05,(now-last)/1000);last=now;
+ for(const s of states){
+  if(s.morph){const m=s.morph,t=Math.min(1,(now-m.start)/m.duration),ease=1-Math.pow(1-t,4);
+   s.points=m.from.map((p,i)=>({x:p.x+(m.to[i].x-p.x)*ease,y:p.y+(m.to[i].y-p.y)*ease}));s.radius=m.fromRadius+(m.toRadius-m.fromRadius)*ease;s.openMix=m.fromMix+(m.toMix-m.fromMix)*ease;
+   if(t===1){s.morph=null;fit(s);}else draw(s);
+  }else if(s.visible&&(!s.driven||s.bubble.open))draw(s);
+ }
+ if(!document.hidden&&!reduced.matches&&states.some(s=>s.visible||s.morph))raf=requestAnimationFrame(tick);
+}
+const observer=new IntersectionObserver(entries=>{for(const entry of entries){const s=states.find(s=>s.bubble===entry.target);s.visible=entry.isIntersecting;if(s.visible)draw(s);}schedule();},{rootMargin:'80px'});
+for(const [index,bubble] of [...document.querySelectorAll('.work-bubble')].entries()){
+ const surface=bubble.querySelector('.bubble-surface'),canvas=document.createElement('canvas');canvas.className='bubble-canvas';canvas.setAttribute('aria-hidden','true');const fallback=document.createElement('canvas');fallback.className='bubble-canvas';fallback.setAttribute('aria-hidden','true');surface.append(canvas,fallback);
+ const s={bubble,surface,canvas,fallback,ctx:fallback.getContext('2d'),seed:index*2.31,points:null,target:null,morph:null,ready:false,visible:false,driven:false,radius:100};states.push(s);
+ try{initialize(s);if(s.ready)surface.classList.add('has-bubble-engine');}catch{ s.ready=false; }
+ canvas.hidden=!s.ready;fallback.hidden=s.ready;surface.classList.add('has-bubble-engine');fit(s);observer.observe(bubble);
+ new ResizeObserver(()=>fit(s)).observe(bubble);
+ bubble.addEventListener('bubblecontourtarget',event=>{s.target=event.detail.points;s.driven=true;});
+ bubble.addEventListener('bubblecontour',event=>{
+  s.target=event.detail.points;s.driven=true;
+  if(s.morph||bubble.open)return;
+  s.points=s.target;s.radius=event.detail.radius;
+  if(s.visible||reduced.matches)draw(s);
+ });
+ bubble.addEventListener('bubblemorph',event=>morph(s,event.detail));
+ bubble.addEventListener('bubblesettle',()=>{s.morph=null;fit(s);});
+ bubble.addEventListener('bubblestatic',()=>{s.target=null;s.driven=false;s.morph=null;fit(s);});
+ canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();s.ready=false;canvas.hidden=true;fallback.hidden=false;draw(s);});
+ canvas.addEventListener('webglcontextrestored',()=>{try{initialize(s);canvas.hidden=!s.ready;fallback.hidden=s.ready;fit(s);}catch{s.ready=false;}schedule();});
+}
+document.addEventListener('visibilitychange',()=>{cancelAnimationFrame(raf);raf=0;if(!document.hidden)schedule();});
+reduced.addEventListener('change',()=>{cancelAnimationFrame(raf);raf=0;for(const s of states){s.morph=null;fit(s);}schedule();});
 })();

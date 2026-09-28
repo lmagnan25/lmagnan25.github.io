@@ -131,3 +131,8 @@ original plain lettering.
 
 Open `/scripts/check-bubble-startup.html` on the preview server for the delayed
 style and zero-width regression checks in Safari or Chrome.
+
+Version **3.2.2** starts ordinary visits and reloads at the name and reactor film,
+instead of restoring a prior scroll position. Reloading also clears the previous
+section fragment. In-page navigation and deliberately shared section links still
+work.

@@ -3,6 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    // Set this before Safari restores the previous page's scroll position.
+    history.scrollRestoration = 'manual';
+    if (performance.getEntriesByType('navigation')[0]?.type === 'reload' && location.hash) {
+      history.replaceState(history.state, '', location.pathname + location.search);
+    }
+    function startAtIntro() {
+      if (!location.hash) window.scrollTo({ top:0, left:0, behavior:'instant' });
+    }
+    document.addEventListener('DOMContentLoaded', startAtIntro, { once:true });
+    addEventListener('pageshow', startAtIntro);
+  </script>
   <meta name="description" content="Solving hard problems with AI. Engineering projects, research, and photography by Loïc Magnan.">
   <meta name="theme-color" content="#080a0b">
   <meta property="og:title" content="Loïc Magnan - Engineer">

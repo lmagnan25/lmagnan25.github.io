@@ -171,20 +171,9 @@ html { background:var(--paper); }
 .resume-heading { display:flex; justify-content:space-between; align-items:baseline; gap:24px; margin-bottom:30px; }
 .resume-heading h2 { font-size:22px; font-weight:400; letter-spacing:-.035em; }
 .resume-section .cv-section { margin:0; padding:38px 0; }
-.film-header .bubble-wordmark { display:flex; align-items:center; flex-wrap:wrap; column-gap:12px; row-gap:2px; }
-.name-film { display:block; width:clamp(216px,22vw,282px); height:auto; overflow:visible; flex-shrink:0; }
-.name-film text, .name-film use { font-family:inherit; font-size:48px; font-weight:500; letter-spacing:-2px; }
-.name-film-halo { fill:none; stroke:url(#name-film-rim); stroke-width:2.7px; stroke-opacity:.3; filter:url(#name-film-soft); }
-.name-film-face { fill:url(#name-film-fill); stroke:url(#name-film-rim); stroke-width:.95px; stroke-linejoin:round; paint-order:stroke fill; }
-.film-header h1 .name-role { padding-top:4px; }
 @media(max-width:620px) {
   .resume-section { padding-bottom:44px; }
   .resume-section .cv-section { padding-block:28px; }
   .resume-heading { gap:18px; margin-bottom:24px; }
   .resume-heading .download-link { margin:0; }
-  .film-header .bubble-wordmark { column-gap:9px; }
-  .name-film { width:216px; }
-  .film-header h1 .name-role { font-size:16px; }
 }
-
-@media(min-width:801px) { .film-header { align-items:center; } }

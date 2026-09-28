@@ -58,13 +58,13 @@ function sizeCanvas(s,left,top,w,h){
 function fit(s){
  if(s.morph)return;
  const w=s.bubble.offsetWidth,h=s.bubble.offsetHeight;
- if(!w||!h)return;
+ if(!Number.isFinite(w)||!Number.isFinite(h)||w<=14||h<=14)return;
  sizeCanvas(s,-padding,-padding,w+padding*2,h+padding*2);
  s.points=!s.bubble.open&&s.target?s.target.map(p=>({...p})):panelPoints(w,h,s.bubble.open);
  s.radius=Math.min(w,h)/2-7;s.openMix=s.bubble.open?1:0;draw(s);
 }
 function draw(s){
- if(!s.points)return;
+ if(!s.box||!s.points||!Number.isFinite(s.radius)||s.radius<=0||!s.points.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)))return;
  const gl=s.gl,loc=s.locations,points=smoothOutline(s.points),count=points.length;
  let cx=0,cy=0;for(const p of points){cx+=p.x/count;cy+=p.y/count;}
  const normals=points.map((p,i)=>{const a=points[(i+count-1)%count],b=points[(i+1)%count],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy)||1;return {x:dy/l,y:-dx/l};});
@@ -73,7 +73,7 @@ function draw(s){
   const grad=ctx.createLinearGradient(cx-s.radius-s.box.left,cy-s.radius-s.box.top,cx+s.radius-s.box.left,cy+s.radius-s.box.top);
   grad.addColorStop(0,'#bfd4e2');grad.addColorStop(.3,'#b6a6cb');grad.addColorStop(.62,'#89b6b9');grad.addColorStop(1,'#dfb7ca');
   ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x-s.box.left,p.y-s.box.top):ctx.moveTo(p.x-s.box.left,p.y-s.box.top));ctx.closePath();
-  ctx.strokeStyle=grad;ctx.lineWidth=1.6;ctx.shadowColor='#a3c6d540';ctx.shadowBlur=9;ctx.stroke();ctx.shadowBlur=0;return;
+  ctx.strokeStyle=grad;ctx.lineWidth=1.6;ctx.shadowColor='#a3c6d540';ctx.shadowBlur=9;ctx.stroke();ctx.shadowBlur=0;s.surface.classList.add('has-bubble-engine');return;
  }
  const radius=s.radius,rings=[-.7,.4,1.8,4,8,14,radius*.22,radius*.34,radius*.48].sort((a,b)=>a-b);
  const needed=(rings.length-1)*count*6*7;
@@ -84,6 +84,7 @@ function draw(s){
  gl.useProgram(s.program);gl.bindBuffer(gl.ARRAY_BUFFER,s.buffer);gl.bufferData(gl.ARRAY_BUFFER,s.data,gl.DYNAMIC_DRAW);
  gl.uniform2f(loc.resolution,s.box.w,s.box.h);gl.uniform1f(loc.radius,Math.min(radius,156));gl.uniform1f(loc.time,reduced.matches?0:time);gl.uniform1f(loc.seed,s.seed);gl.uniform1f(loc.mode,0);gl.uniform1f(loc.expanded,s.openMix||0);
  gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLES,0,cursor/7);
+ s.surface.classList.add('has-bubble-engine');
 }
 function morph(s,detail){
  const fromPoints=(s.points||panelPoints(detail.from.width,detail.from.height,detail.from.open)).map(p=>({x:p.x+detail.from.left-detail.to.left,y:p.y+detail.from.top-detail.to.top}));
@@ -111,14 +112,15 @@ const observer=new IntersectionObserver(entries=>{for(const entry of entries){co
 for(const [index,bubble] of [...document.querySelectorAll('.work-bubble')].entries()){
  const surface=bubble.querySelector('.bubble-surface'),canvas=document.createElement('canvas');canvas.className='bubble-canvas';canvas.setAttribute('aria-hidden','true');const fallback=document.createElement('canvas');fallback.className='bubble-canvas';fallback.setAttribute('aria-hidden','true');surface.append(canvas,fallback);
  const s={bubble,surface,canvas,fallback,ctx:fallback.getContext('2d'),seed:index*2.31,points:null,target:null,morph:null,ready:false,visible:false,driven:false,radius:100};states.push(s);
- try{initialize(s);if(s.ready)surface.classList.add('has-bubble-engine');}catch{ s.ready=false; }
- canvas.hidden=!s.ready;fallback.hidden=s.ready;surface.classList.add('has-bubble-engine');fit(s);observer.observe(bubble);
+ try{initialize(s);}catch{ s.ready=false; }
+ canvas.hidden=!s.ready;fallback.hidden=s.ready;fit(s);observer.observe(bubble);
  new ResizeObserver(()=>fit(s)).observe(bubble);
  bubble.addEventListener('bubblecontourtarget',event=>{s.target=event.detail.points;s.driven=true;});
  bubble.addEventListener('bubblecontour',event=>{
   s.target=event.detail.points;s.driven=true;
   if(s.morph||bubble.open)return;
   s.points=s.target;s.radius=event.detail.radius;
+  if(!s.box)fit(s);
   if(s.visible||reduced.matches)draw(s);
  });
  bubble.addEventListener('bubblemorph',event=>morph(s,event.detail));
@@ -127,6 +129,9 @@ for(const [index,bubble] of [...document.querySelectorAll('.work-bubble')].entri
  canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();s.ready=false;canvas.hidden=true;fallback.hidden=false;draw(s);});
  canvas.addEventListener('webglcontextrestored',()=>{try{initialize(s);canvas.hidden=!s.ready;fallback.hidden=s.ready;fit(s);}catch{s.ready=false;}schedule();});
 }
+// Keep the CSS rim until a drawable canvas exists, and refit after cold loads
+// and back/forward-cache restores even if no resize notification was delivered.
+for(const event of ['load','pageshow'])addEventListener(event,()=>{states.forEach(fit);schedule();});
 document.addEventListener('visibilitychange',()=>{cancelAnimationFrame(raf);raf=0;if(!document.hidden)schedule();});
 reduced.addEventListener('change',()=>{cancelAnimationFrame(raf);raf=0;for(const s of states){s.morph=null;fit(s);}schedule();});
 })();

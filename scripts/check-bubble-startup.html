@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bubble startup regression</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../portfolio.css">
+  <style>
+    body { padding:24px; }
+    .case { max-width:900px; margin-block:32px; }
+    #zero-width { width:0; }
+    #late-style .work-bubble { --bubble-size:initial; --bubble-scale:initial; }
+    output { display:block; white-space:pre-wrap; }
+  </style>
+</head>
+<body class="portfolio-page">
+  <h1>Bubble startup regression</h1>
+  <output id="result">Checking delayed styles and zero-width startup…</output>
+  <div class="case bubble-list" id="late-style"></div>
+  <div class="case bubble-list" id="zero-width"></div>
+  <script>
+    const errors=[];
+    addEventListener('error',event=>errors.push(event.message));
+    for(const list of document.querySelectorAll('.bubble-list')){
+      for(const name of ['ATLAS','Taurus','NTP','ADS','Agentic System Research']){
+        const bubble=document.createElement('details');bubble.className='work-bubble';
+        bubble.innerHTML='<summary><span class="bubble-surface" aria-hidden="true"></span><span class="bubble-title">'+name+'</span><span class="bubble-action">+</span></summary><div class="bubble-content"><p>Startup test content.</p></div>';
+        list.append(bubble);
+      }
+    }
+    const report=document.querySelector('#result');
+    const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+    const assert=(condition,message)=>{if(!condition)throw Error(message);};
+    addEventListener('load',async()=>{
+      try{
+        await pause(750);
+        for(const list of document.querySelectorAll('.bubble-list')){
+          assert(!list.classList.contains('is-floating'),'Floating enabled before valid dimensions');
+          assert(!list.innerHTML.includes('NaN'),'Invalid geometry written during startup');
+        }
+        // Restore CSS after load, without a navigation or window resize.
+        document.querySelector('#late-style').removeAttribute('id');
+        document.querySelector('#zero-width').removeAttribute('id');
+        // Allow background-tab timer throttling while the pending layout retries.
+        for(let attempt=0;attempt<30;attempt++){
+          if([...document.querySelectorAll('.bubble-list')].every(list=>list.classList.contains('is-floating')))break;
+          await pause(100);
+        }
+        for(const list of document.querySelectorAll('.bubble-list')){
+          assert(list.classList.contains('is-floating'),'Startup did not recover (visibility: '+document.visibilityState+', width: '+list.clientWidth+', size: '+getComputedStyle(list.querySelector('.work-bubble')).getPropertyValue('--bubble-size')+', errors: '+errors.join('; ')+')');
+          const positions=[];
+          for(const bubble of list.querySelectorAll('.work-bubble')){
+            assert(Number.isFinite(parseFloat(bubble.style.getPropertyValue('--floating-size'))),'Invalid bubble size');
+            assert(bubble.style.transform.includes('translate3d('),'Missing bubble position');
+            assert(!bubble.style.cssText.includes('NaN'),'Invalid transform');
+            assert(bubble.querySelector('.has-bubble-engine'),'Canvas renderer did not recover');
+            const canvas=[...bubble.querySelectorAll('canvas')].find(c=>!c.hidden);
+            assert(canvas&&canvas.width>0&&canvas.height>0,'Missing rendered surface');
+            const bounds=bubble.getBoundingClientRect();positions.push([bounds.x,bounds.y]);
+          }
+          assert(new Set(positions.map(p=>p.map(Math.round).join(','))).size===5,'Labels are stacked');
+        }
+        assert(!errors.length,errors.join('\n'));
+        report.textContent='PASS: delayed sizing and zero-width startup recover without a refresh. Five distinct bubbles per case; no script errors.';
+      }catch(error){report.textContent='FAIL: '+error.message;}
+    });
+  </script>
+  <script src="../bubble-physics.js" defer></script>
+  <script src="../bubble-engine.js" defer></script>
+  <script src="../bubble-motion.js" defer></script>
+  <script src="../work-bubbles.js" defer></script>
+</body>
+</html>

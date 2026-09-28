@@ -119,3 +119,15 @@ runs at twice the reviewed test speed. ATLAS starts uppermost. The homepage plac
 the full CV before Photography and uses soap-film lettering for the name.
 A stronger initial impulse brings the bubbles into contact sooner.
 See [changes and validation](docs/soap-film-test.md).
+
+## Version 3.2.1
+
+Bubble startup waits for finite, nonzero layout measurements before switching
+to absolute positioning. Delayed styles and zero-width startup retry without a
+refresh; resize changes apply outside ResizeObserver delivery. Canvas rims
+replace the CSS fallback only after a valid draw. Page load, restored tabs,
+and visibility changes recheck initialization. The name is restored to its
+original plain lettering.
+
+Open `/scripts/check-bubble-startup.html` on the preview server for the delayed
+style and zero-width regression checks in Safari or Chrome.

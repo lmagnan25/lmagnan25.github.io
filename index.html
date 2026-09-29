@@ -26,7 +26,7 @@
   <link rel="canonical" href="https://loicmagnan.com/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css?v=3.1">
-  <link rel="stylesheet" href="portfolio.css?v=3.2.1">
+  <link rel="stylesheet" href="portfolio.css?v=3.2.3">
 </head>
 <body class="portfolio-page">
   <a class="skip-link" href="#work">Skip to work</a>
@@ -34,9 +34,6 @@
     <section class="film-section" aria-labelledby="name">
       <header class="film-header">
         <h1 id="name">Loïc Magnan <span>- AI &amp; Nuclear Engineer</span></h1>
-        <nav aria-label="Main navigation">
-          <a href="#photography">Photography</a>
-        </nav>
       </header>
       <div class="film-frame">
         <video id="reactor-film" muted loop playsinline preload="metadata" poster="assets/film/poster.jpg?v=2.3" aria-label="Film of fuel pellets assembling into a boiling water reactor, followed by recorded neutron paths" aria-describedby="film-description">
@@ -44,11 +41,6 @@
           <source data-src="assets/film/reactor.mp4?v=2.3" type="video/mp4">
         </video>
         <p id="film-description" class="sr-only">A silent film made from the reactor visualization. Neutron paths use recorded OpenMC positions at the model's original scale; particle size and time are adjusted for visibility.</p>
-      </div>
-      <div class="film-controls">
-        <a href="#work" aria-label="Explore projects and research">Explore <span aria-hidden="true">↓</span></a>
-        <button id="film-toggle" type="button" aria-label="Play reactor film" hidden>Play <span aria-hidden="true">▶</span></button>
-        <noscript><a href="assets/film/reactor.mp4">Play film <span aria-hidden="true">↗</span></a></noscript>
       </div>
       <p class="intro-line">Solving hard problems with AI.</p>
     </section>
@@ -233,7 +225,10 @@
     <section class="resume-section" id="cv" aria-labelledby="resume-title">
       <div class="resume-heading">
         <h2 id="resume-title">CV</h2>
-        <a class="download-link" href="assets/Resume_Loic_Magnan.pdf" download>Download PDF <span aria-hidden="true">↓</span></a>
+        <div class="resume-actions">
+          <a class="download-link" href="resume.html">View PDF <span aria-hidden="true">↗</span></a>
+          <a class="download-link" href="assets/Resume_Loic_Magnan.pdf" download>Download PDF <span aria-hidden="true">↓</span></a>
+        </div>
       </div>
     <section class="cv-section" aria-labelledby="resume-education">
       <h2 id="resume-education">Education</h2>
@@ -354,7 +349,7 @@
       <p class="viewer-status" role="status" aria-live="polite"></p>
     </div>
   </dialog>
-  <script src="portfolio.js?v=3.1" defer></script>
+  <script src="portfolio.js?v=3.2.3" defer></script>
   <script src="bubble-physics.js?v=3.2" defer></script>
   <script src="bubble-engine.js?v=3.2.1" defer></script>
   <script src="bubble-motion.js?v=3.2.1" defer></script>

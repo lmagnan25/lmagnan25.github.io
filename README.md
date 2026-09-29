@@ -136,3 +136,8 @@ Version **3.2.2** starts ordinary visits and reloads at the name and reactor fil
 instead of restoring a prior scroll position. Reloading also clears the previous
 section fragment. In-page navigation and deliberately shared section links still
 work.
+
+Version **3.2.3** removes the homepage Photography navigation link and film
+Explore/Pause controls. The film still plays automatically when visible, with
+reduced-motion preferences respected. The inline CV offers View PDF alongside
+Download PDF; `resume.html` embeds the original PDF with Home and Download links.
